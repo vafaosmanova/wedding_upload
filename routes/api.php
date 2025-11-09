@@ -9,11 +9,7 @@ use App\Http\Controllers\MediaController;
 use App\Http\Controllers\QRCodeController;
 use App\Http\Controllers\UploadController;
 
-/*
-|--------------------------------------------------------------------------
-| Test & Debug
-|--------------------------------------------------------------------------
-*/
+
 Route::get('test', fn() => response()->json(['message' => 'Hello world']));
 Route::get('/debug', function (Request $request) {
     return [
@@ -23,29 +19,40 @@ Route::get('/debug', function (Request $request) {
         'session_token' => session()->token(),
     ];
 });
-/*
-|--------------------------------------------------------------------------
-| Public routes (no authentication)
-|--------------------------------------------------------------------------
-*/
 
-// Registration & login
+Route::get('/test-redis', function () {
+    try {
+        \Illuminate\Support\Facades\Redis::set('test_key', 'ok', 'EX', 10);
+        $value = \Illuminate\Support\Facades\Redis::get('test_key');
+        return response()->json(['success' => true, 'value' => $value]);
+    } catch (Exception $e) {
+        return response()->json(['success' => false, 'error' => $e->getMessage()]);
+    }
+});
+
+Route::get('/test-hetzner', function () {
+    try {
+        $filePath = 'test.txt';
+        \Illuminate\Support\Facades\Storage::disk('hetzner')->put($filePath, 'Hello Hetzner');
+        $content = \Illuminate\Support\Facades\Storage::disk('hetzner')->get($filePath);
+        \Illuminate\Support\Facades\Storage::disk('hetzner')->delete($filePath);
+        return response()->json(['success' => true, 'content' => $content]);
+    } catch (Exception $e) {
+        return response()->json(['success' => false, 'error' => $e->getMessage()]);
+    }
+});
+
+
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 
-// Guest access (PIN & uploads)
 Route::prefix('guest')->group(function () {
-    Route::get('/{album_id}', [GuestAlbumController::class, 'show']);          // album info
-    Route::post('/{album_id}/verify-pin', [GuestAlbumController::class, 'verifyPin']); // PIN verification
-    Route::get('/{album_id}/media', [GuestAlbumController::class, 'media']);  // list media
-    Route::post('/{album_id}/upload', [GuestAlbumController::class, 'upload']); // upload media
+    Route::get('/{album_id}', [GuestAlbumController::class, 'show']);
+    Route::post('/{album_id}/verify-pin', [GuestAlbumController::class, 'verifyPin']);
+    Route::get('/{album_id}/media', [GuestAlbumController::class, 'media']);
+    Route::post('/{album_id}/upload', [UploadController::class, 'upload']);
 });
 
-/*
-|--------------------------------------------------------------------------
-| Protected routes for album owners (auth:sanctum)
-|--------------------------------------------------------------------------
-*/
 Route::middleware('auth:sanctum')->group(function () {
 
     // Album CRUD

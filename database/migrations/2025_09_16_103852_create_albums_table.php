@@ -9,9 +9,9 @@ return new class extends Migration {
     {
         Schema::create('albums', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('user_id'); // Besitzer
-            $table->string('title'); // Albumname
-            $table->longText('qr_code')->nullable()->change();// QR-Code (Pfad oder Token)
+            $table->unsignedBigInteger('user_id');
+            $table->string('title');
+            $table->longText('qr_code')->nullable()->change();
             $table->timestamps();
 
             $table->foreign('user_id')

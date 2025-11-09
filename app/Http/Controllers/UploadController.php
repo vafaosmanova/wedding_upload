@@ -17,19 +17,16 @@ class UploadController extends Controller
         $token = $request->header('X-Gast-Token');
 
         if ($token) {
-            $redisAlbumId = Redis::get("guest_access:{$token}");
+            $redisAlbumId = Redis::get("guest_token:{$token}");
             if (!$redisAlbumId || $redisAlbumId != $albumId) {
                 return response()->json(['message' => 'Unauthorized'], 403);
             }
             $isGuest = true;
         } else {
-            // Besitzer muss angemeldet sein (Sanctum cookie auth)
             if (!auth()->check() || $album->user_id !== auth()->id()) {
                 return response()->json(['message' => 'Nicht autorisiert'], 403);
             }
         }
-
-        // Валидация файлов
         $rules = [
             'photos.*' => 'image|mimes:jpg,jpeg,png|max:5120', // 5MB
             'videos.*' => 'mimetypes:video/mp4,video/quicktime|max:51200', // 50MB
@@ -38,11 +35,9 @@ class UploadController extends Controller
 
         $uploadedFiles = ['photos' => [], 'videos' => []];
 
-        // Все медиа сохраняем на hetzner (единственный общий диск)
         $disk = 'hetzner';
-        $approved = !$isGuest; // сразу одобрено, если владелец
+        $approved = !$isGuest;
 
-        // Загрузка фото
         if ($request->hasFile('photos')) {
             foreach ($request->file('photos') as $file) {
                 $path = $file->store('albums/photos', $disk);
@@ -60,7 +55,6 @@ class UploadController extends Controller
             }
         }
 
-        // Загрузка видео
         if ($request->hasFile('videos')) {
             foreach ($request->file('videos') as $file) {
                 $path = $file->store('albums/videos', $disk);

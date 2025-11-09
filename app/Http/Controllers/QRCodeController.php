@@ -11,7 +11,7 @@ class QRCodeController extends Controller
         $album = Album::with('pin')->findOrFail($albumId);
 
         return response()->json([
-            'qrCode' => $album->qr_code,
+            'qr_code' => $album->qr_code,
             'pin'    => $album->pin->pin ?? null,
         ]);
     }

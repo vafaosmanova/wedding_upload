@@ -10,6 +10,7 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use ZipArchive;
 use Illuminate\Support\Facades\Redis;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Log;
 
 class ExportAlbumJob implements ShouldQueue
@@ -18,29 +19,24 @@ class ExportAlbumJob implements ShouldQueue
 
     protected $albumId;
 
-    /**
-     * Create a new job instance.
-     */
     public function __construct($albumId)
     {
         $this->albumId = $albumId;
     }
 
-    /**
-     * Execute the job.
-     */
     public function handle()
     {
-        $album = Album::with('photos', 'videos')->findOrFail($this->albumId);
+        $album = Album::with([
+            'photos' => fn($q) => $q->where('approved', true),
+            'videos' => fn($q) => $q->where('approved', true)
+        ])->findOrFail($this->albumId);
 
-        // Ordner für Exporte prüfen
-        $exportDir = storage_path('app/public/exports');
-        if (!file_exists($exportDir)) {
-            mkdir($exportDir, 0755, true);
-        }
+        //Für zeitfriestige Speicherung
+        $tmpDir = storage_path('app/tmp/exports');
+        if (!file_exists($tmpDir)) mkdir($tmpDir, 0755, true);
 
-        $zipFileName = 'exports/album_' . $album->id . '.zip';
-        $zipPath = storage_path('app/public/' . $zipFileName);
+        $zipFileName = 'album_' . $album->id . '.zip';
+        $zipPath = $tmpDir . '/' . $zipFileName;
 
         $zip = new ZipArchive();
         if ($zip->open($zipPath, ZipArchive::CREATE | ZipArchive::OVERWRITE) !== true) {
@@ -48,50 +44,66 @@ class ExportAlbumJob implements ShouldQueue
             return;
         }
 
-        // Alle vorhandenen Dateien sammeln
         $files = [];
         foreach ($album->photos as $photo) {
-            $filePath = storage_path('app/public/' . $photo->path);
-            if (file_exists($filePath)) {
-                $files[] = $filePath;
-            }
+            $localPath = $this->downloadFile($photo->path);
+            if ($localPath) $files[] = ['path' => $localPath, 'zipPath' => 'photos/' . basename($localPath)];
         }
-
         foreach ($album->videos as $video) {
-            $filePath = storage_path('app/public/' . $video->path);
-            if (file_exists($filePath)) {
-                $files[] = $filePath;
-            }
+            $localPath = $this->downloadFile($video->path);
+            if ($localPath) $files[] = ['path' => $localPath, 'zipPath' => 'videos/' . basename($localPath)];
         }
 
         $totalFiles = count($files);
-
         if ($totalFiles === 0) {
             Redis::set("album_export_progress:{$album->id}", 100);
             Redis::set("album_export_message:{$album->id}", "Keine Dateien zum Exportieren.");
             return;
         }
 
-        // Fortschritt initialisieren
         Redis::set("album_export_progress:{$album->id}", 0);
         Redis::set("album_export_progress_counter:{$album->id}", 0);
 
         foreach ($files as $file) {
-            $zip->addFile($file, basename($file));
+            $zip->addFile($file['path'], $file['zipPath']);
             $this->updateProgress($album->id, $totalFiles);
         }
 
         $zip->close();
 
-        // Fortschritt abschließen
+        try {
+            Storage::disk('hetzner')->putFileAs('exports', new \Illuminate\Http\File($zipPath), $zipFileName);
+        } catch (\Exception $e) {
+            Log::error("Upload des ZIP fehlgeschlagen: " . $e->getMessage());
+        }
+
+        // Clean up local temp files
+        foreach ($files as $file) {
+            @unlink($file['path']);
+        }
+        @unlink($zipPath);
+
         Redis::set("album_export_progress:{$album->id}", 100);
         Redis::del("album_export_progress_counter:{$album->id}");
         Redis::set("album_export_message:{$album->id}", "Export abgeschlossen!");
     }
 
-    /**
-     * Fortschritt in Redis aktualisieren.
-     */
+    protected function downloadFile($remotePath)
+    {
+        $tmpDir = storage_path('app/tmp/downloads');
+        if (!file_exists($tmpDir)) mkdir($tmpDir, 0755, true);
+
+        $localPath = $tmpDir . '/' . basename($remotePath);
+        try {
+            $contents = Storage::disk('hetzner')->get($remotePath);
+            file_put_contents($localPath, $contents);
+            return $localPath;
+        } catch (\Exception $e) {
+            Log::error("Fehler beim Herunterladen: {$remotePath}, {$e->getMessage()}");
+            return null;
+        }
+    }
+
     protected function updateProgress($albumId, $totalFiles)
     {
         $completed = Redis::incr("album_export_progress_counter:{$albumId}");

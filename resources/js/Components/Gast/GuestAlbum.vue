@@ -5,9 +5,9 @@
                 {{ album.title || 'Album' }}
             </h1>
 
-            <!-- PIN Verification -->
+            <!-- PIN Verification for guests -->
             <PinVerification
-                v-if="!verified"
+                v-if="!verified && albumId"
                 :album-id="albumId"
                 @verified="handleVerified"
                 @set-token="setGuestToken"
@@ -16,8 +16,17 @@
 
             <!-- Upload & Gallery for verified guests -->
             <div v-else>
-                <UploadSection :album-id="albumId" :guest-token="guestToken" />
-                <AlbumGallery :album-id="albumId" :guest-token="guestToken" />
+                <UploadSection
+                    :album-id="albumId"
+                    :guest-token="guestToken"
+                    @uploaded="loadMedia"
+                />
+
+                <AlbumGallery
+                    :album-id="albumId"
+                    :guest-token="guestToken"
+                    ref="gallery"
+                />
             </div>
 
             <p v-if="error" class="text-red-500 mt-4">{{ error }}</p>
@@ -33,7 +42,9 @@ import AlbumGallery from './AlbumGallery.vue';
 
 export default {
     components: { PinVerification, UploadSection, AlbumGallery },
-    props: ['albumId'], // согласовано с маршрутом :album_id
+    props: {
+        albumId: { type: [String, Number], required: true }
+    },
     data() {
         return {
             album: {},
@@ -43,14 +54,7 @@ export default {
         };
     },
     async mounted() {
-        try {
-            await axios.get('/sanctum/csrf-cookie', { withCredentials: true });
-            const res = await axios.get(`/api/guest/${this.albumId}`);
-            this.album = res.data;
-        } catch (err) {
-            console.error(err);
-            this.error = err.response?.data?.message || 'Album nicht gefunden.';
-        }
+        await this.loadAlbum();
     },
     methods: {
         handleVerified() {
@@ -58,12 +62,25 @@ export default {
         },
         setGuestToken(token) {
             this.guestToken = token;
+        },
+        async loadAlbum() {
+            try {
+                const res = await axios.get(`/api/guest/${this.albumId}`);
+                this.album = res.data;
+            } catch (err) {
+                console.error(err);
+                this.error = err.response?.data?.message || 'Album nicht gefunden.';
+            }
+        },
+        async loadMedia() {
+            if (!this.$refs.gallery) return;
+            this.$refs.gallery.loadMedia();
         }
     }
 };
 </script>
 
-<style lang="css">
+<style>
 .font-lila {
     font-family: 'Lila', sans-serif;
 }

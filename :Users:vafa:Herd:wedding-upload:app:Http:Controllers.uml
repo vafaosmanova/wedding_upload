@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Diagram>
+  <ID>PHP</ID>
+  <OriginalElement>/Users/vafa/Herd/wedding-upload/app/Http/Controllers</OriginalElement>
+  <nodes>
+    <node x="-101.93793103185618" y="301.2512855149023">\App\Http\Controllers\UploadController</node>
+    <node x="168.18142987900063" y="183.8253202571605">\App\Http\Controllers\GuestAlbumController</node>
+    <node x="181.16543349912067" y="-13.940802989700472">\App\Http\Controllers\MediaController</node>
+    <node x="-2.5489330804944075" y="116.26165933924082">\App\Http\Controllers\Controller</node>
+    <node x="458.9540151032807" y="240.65828956386088">\App\Http\Controllers\AlbumController</node>
+    <node x="701.6004629322488" y="91.73571821214173">\App\Http\Controllers\AuthController</node>
+    <node x="457.69973042847283" y="85.5354396745295">\App\Http\Controllers\QRCodeController</node>
+  </nodes>
+  <notes />
+  <edges>
+    <edge source="\App\Http\Controllers\UploadController" target="\App\Http\Controllers\Controller" relationship="GENERALIZATION">
+      <point x="103.49993103185618" y="-2.8551490225936504E-4" />
+      <point x="138.0" y="332.751" />
+      <point x="138.0" y="130.262" />
+      <point x="54.99993308049441" y="3.406607591784905E-4" />
+    </edge>
+    <edge source="\App\Http\Controllers\MediaController" target="\App\Http\Controllers\Controller" relationship="GENERALIZATION">
+      <point x="107.99956650087935" y="-1.970102995301204E-4" />
+      <point x="428.0" y="53.559" />
+      <point x="428.0" y="-31.441000000000003" />
+      <point x="138.0" y="-31.441000000000003" />
+      <point x="138.0" y="130.262" />
+      <point x="54.99993308049441" y="3.406607591784905E-4" />
+    </edge>
+    <edge source="\App\Http\Controllers\AuthController" target="\App\Http\Controllers\Controller" relationship="GENERALIZATION">
+      <point x="-78.50046293224875" y="30.799281787858263" />
+      <point x="428.0" y="166.035" />
+      <point x="428.0" y="-31.441000000000003" />
+      <point x="138.0" y="-31.441000000000003" />
+      <point x="138.0" y="130.262" />
+      <point x="54.99993308049441" y="3.406607591784905E-4" />
+    </edge>
+    <edge source="\App\Http\Controllers\GuestAlbumController" target="\App\Http\Controllers\Controller" relationship="GENERALIZATION">
+      <point x="-109.50042987900063" y="-3.2025716052430653E-4" />
+      <point x="138.0" y="251.325" />
+      <point x="138.0" y="130.262" />
+      <point x="54.99993308049441" y="3.406607591784905E-4" />
+    </edge>
+    <edge source="\App\Http\Controllers\AlbumController" target="\App\Http\Controllers\Controller" relationship="GENERALIZATION">
+      <point x="-91.0000151032807" y="-2.895638608606532E-4" />
+      <point x="428.0" y="344.158" />
+      <point x="428.0" y="-31.441000000000003" />
+      <point x="138.0" y="-31.441000000000003" />
+      <point x="138.0" y="130.262" />
+      <point x="54.99993308049441" y="3.406607591784905E-4" />
+    </edge>
+    <edge source="\App\Http\Controllers\QRCodeController" target="\App\Http\Controllers\Controller" relationship="GENERALIZATION">
+      <point x="-87.99973042847284" y="-4.396745294954485E-4" />
+      <point x="428.0" y="117.035" />
+      <point x="428.0" y="-31.441000000000003" />
+      <point x="138.0" y="-31.441000000000003" />
+      <point x="138.0" y="130.262" />
+      <point x="54.99993308049441" y="3.406607591784905E-4" />
+    </edge>
+  </edges>
+  <settings layout="Hierarchic Compact" zoom="1.162079510703364" showDependencies="false" x="489.18157894736834" y="218.00000000000003" />
+  <SelectedNodes>
+    <node>\App\Http\Controllers\Controller</node>
+  </SelectedNodes>
+  <Categories>
+    <Category>Methods</Category>
+  </Categories>
+  <VISIBILITY>private</VISIBILITY>
+</Diagram>
+

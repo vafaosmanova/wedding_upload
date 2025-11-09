@@ -13,16 +13,13 @@ use Throwable;
 
 class AuthController extends Controller
 {
-    /**
-     * Register a new user and create a default album with PIN
-     */
     public function register(Request $request)
     {
         $request->validate([
             'name'        => 'required|string|max:255',
             'email'       => 'required|email|unique:users,email',
             'password'    => 'required|string|confirmed|min:4',
-            'album_title' => 'required|string|max:255',
+            'title'       => 'required|string|max:255',
             'pin'         => 'required|string|min:4|max:10',
         ]);
 
@@ -31,26 +28,23 @@ class AuthController extends Controller
             $album = null;
 
             DB::transaction(function () use ($request, &$user, &$album) {
-                // Create user
+
                 $user = User::create([
                     'name'     => $request->name,
                     'email'    => $request->email,
                     'password' => Hash::make($request->password),
                 ]);
 
-                // Create album with QR code
                 $album = Album::createWithQr([
-                    'title'   => $request->album_title,
+                    'title'   => $request->title,
                     'user_id' => $user->id,
                 ]);
 
-                // Create PIN
                 Pin::create([
                     'pin'      => $request->pin,
                     'album_id' => $album->id,
                 ]);
             });
-            // Log in user via session (cookie-based)
             auth()->login($user);
 
             return response()->json([
@@ -77,9 +71,6 @@ class AuthController extends Controller
         }
     }
 
-    /**
-     * Login user via session (SPA-friendly)
-     */
     public function login(Request $request)
     {
         $request->validate([
@@ -97,7 +88,6 @@ class AuthController extends Controller
                 ], 401);
             }
 
-            // Log in user via session (cookie-based)
             auth()->login($user);
 
             return response()->json([

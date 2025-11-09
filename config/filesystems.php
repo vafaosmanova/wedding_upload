@@ -49,7 +49,7 @@ return [
             'host' => env('HETZNER_HOST'),
             'username' => env('HETZNER_USERNAME'),
             'password' => env('HETZNER_PASSWORD'),
-            'root' => env('HETZNER_ROOT', '/'), // папка на Storage Box
+            'root' => env('HETZNER_ROOT', '/'),
             'port' => intval(env('HETZNER_PORT')),
             'timeout' => 30,
         ],

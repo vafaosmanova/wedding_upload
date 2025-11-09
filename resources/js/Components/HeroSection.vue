@@ -23,15 +23,18 @@
             </p>
         </div>
         <FeatureSection/>
+        <PricingSection/>
         <ContactSection/>
     </section>
 </template>
 
 <script>
 import FeatureSection from "./FeaturesSection.vue";
+import PricingSection from "./PricingSection.vue";
 import ContactSection from "./ContactSection.vue";
 
+
 export default {
-    components: {ContactSection, FeatureSection}
+    components: {PricingSection, ContactSection, FeatureSection}
 };
 </script>

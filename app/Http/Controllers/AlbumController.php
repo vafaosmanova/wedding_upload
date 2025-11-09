@@ -9,19 +9,16 @@ use App\Jobs\ExportAlbumJob;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Redis;
-use Illuminate\Support\Facades\Storage;
 use Throwable;
 
 class AlbumController extends Controller
 {
-    /** List all albums for authenticated owner */
     public function index()
     {
-        $albums = Album::where('user_id', auth()->user()->id)->get();
+        $albums = Album::where('user_id', auth()->id())->get();
         return response()->json($albums);
     }
 
-    /** Create a new album (owner) */
     public function store(Request $request)
     {
         $request->validate([
@@ -75,62 +72,22 @@ class AlbumController extends Controller
         }
     }
 
-    /** Update album (owner) */
     public function update(Request $request, $id)
     {
         $album = Album::findOrFail($id);
-        if ($album->user_id !== auth()->id()) {
-            return response()->json(['message' => 'Nicht autorisiert'], 403);
-        }
-        $request->validate(['title' => 'required|string|max:255']);
-        $album->update(['title' => $request->title]);
+        $request->validate(['title' => 'nullable|string|max:255',
+        'pin' => 'nullable|string|min:4|max:10']);
+        $album->update($request->only(['title', 'pin']));
 
-        return response()->json($album);
+        return response()->json(['message' => 'Album aktualisiert',
+        'album' => $album]);
     }
 
-    /** Delete album (owner) */
     public function destroy($id)
     {
         $album = Album::findOrFail($id);
-        if ($album->user_id !== auth()->id()) {
-            return response()->json(['message' => 'Nicht autorisiert'], 403);
-        }
         $album->delete();
         return response()->json(['message' => 'Album gelöscht']);
-    }
-
-    /** Guest: verify PIN and create temporary Redis token */
-    public function verifyPin(Request $request, $id)
-    {
-        $request->validate(['pin' => 'required|string']);
-
-        $pin = Pin::where('pin', $request->input('pin'))->first();
-
-        if (!$pin || $pin->album_id != $id) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Ungültiger PIN oder Album nicht gefunden.'
-            ], 403);
-        }
-
-        $album = Album::find($id);
-        if (!$album) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Album nicht gefunden.'
-            ], 404);
-        }
-
-        // Создаём Redis токен для гостя (10 минут)
-        $token = bin2hex(random_bytes(16));
-        Redis::setex("guest_access:{$token}", 600, $id);
-
-        return response()->json([
-            'success' => true,
-            'message' => 'PIN erfolgreich überprüft.',
-            'album' => $album,
-            'token' => $token
-        ]);
     }
 
     /** Export album to ZIP (owner) */

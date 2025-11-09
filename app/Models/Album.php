@@ -18,6 +18,7 @@ use SimpleSoftwareIO\QrCode\Generator;
  * @method static find($album_id)
  * @property mixed $id
  * @property mixed $qr_code
+ * @property mixed $title
  */
 class Album extends Model
 {

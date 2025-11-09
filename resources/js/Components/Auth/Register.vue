@@ -27,7 +27,7 @@
                 class="input-field"
             />
             <input
-                v-model="form.album_title"
+                v-model="form.title"
                 placeholder="Album Name"
                 class="input-field"
             />
@@ -44,7 +44,7 @@
                 Registrieren
             </button>
 
-            <p v-if="qrCode" class="mt-4 text-center" v-html="qrCode"></p>
+            <p v-if="qr_code" class="mt-4 text-center" v-html="qr_code"></p>
             <p v-if="Object.keys(errors).length" class="text-red-500 mt-2">
                 {{ formatErrors }}
             </p>
@@ -63,10 +63,10 @@ export default {
                 email: '',
                 password: '',
                 password_confirmation: '',
-                album_title: '',
+                title: '',
                 pin: ''
             },
-            qrCode: null,
+            qr_code: null,
             errors: {}
         };
     },
@@ -81,12 +81,9 @@ export default {
             try {
                 await axios.get('/sanctum/csrf-cookie', { withCredentials: true });
 
-                const { data } = await axios.post(
-                    '/api/register',
-                    this.form
-                );
+                const { data } = await axios.post('/api/register', this.form );
 
-                this.qrCode = data.qrCode;
+                this.qr_code = data.qr_code;
 
                 this.$router.push('/dashboard');
             } catch (err) {

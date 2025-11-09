@@ -1,17 +1,17 @@
 <template>
     <div class="font-lila bg-gray-100 min-h-screen">
 
-
         <div class="max-w-6xl mx-auto p-6">
             <h1 class="text-4xl mb-8 text-center text-purple-600">Meine Alben</h1>
 
             <AlbumForm @albumCreated="addAlbum" />
 
-            <AlbumList
+            <AlbumsList
                 v-if="albums.length"
-                :alben="albums"
+                :albums="albums"
                 @aktualisiert="loadAlbums"
             />
+            <UploadSection album-id="album.id"/>
 
             <p v-if="error" class="text-red-500 mt-4">{{ error }}</p>
             <p v-else-if="!albums.length" class="text-gray-500 mt-4">Keine Alben gefunden.</p>
@@ -22,10 +22,11 @@
 <script>
 import axios from 'axios';
 import AlbumForm from './AlbumForm.vue';
-import AlbumList from './AlbumList.vue';
+import AlbumsList from './AlbumsList.vue';
+import UploadSection from "../Gast/UploadSection.vue";
 
 export default {
-    components: { AlbumForm, AlbumList },
+    components: { AlbumForm, AlbumsList, UploadSection },
     data() {
         return {
             albums: [],
