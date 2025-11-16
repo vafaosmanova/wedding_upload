@@ -46,4 +46,9 @@ class User extends Authenticatable
     {
         return $this->belongsToMany(Album::class, 'album_user', 'user_id', 'album_id');
     }
+    public function canViewAlbum($albumId): bool
+    {
+        return $this->albums()->where('id', $albumId)->exists();
+    }
+
 }

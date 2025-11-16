@@ -10,8 +10,6 @@ axios.defaults.withCredentials = true;
 axios.defaults.baseURL = 'https://wedding-upload.test';
 
 const app = createApp(App);
-
 app.config.globalProperties.$axios = axios;
 app.use(router);
-
 app.mount('#app');

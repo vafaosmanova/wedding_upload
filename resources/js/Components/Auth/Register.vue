@@ -1,54 +1,56 @@
 <template>
-    <div class="font-lila bg-gray-100 min-h-screen flex justify-center items-center">
-        <div class="bg-white p-6 rounded-lg shadow w-full max-w-md">
-            <h2 class="text-2xl mb-4 text-purple-600 font-semibold">Registrieren</h2>
+    <h2 class="text-2xl text-purple-600 font-semibold">Registrieren</h2>
+    <div class="font-lila bg-gray-100  flex justify-center items-center">
 
-            <input
-                v-model="form.name"
-                placeholder="Name"
-                class="input-field"
-            />
-            <input
-                v-model="form.email"
-                type="email"
-                placeholder="E-Mail"
-                class="input-field"
-            />
-            <input
-                v-model="form.password"
-                type="password"
-                placeholder="Passwort"
-                class="input-field"
-            />
-            <input
-                v-model="form.password_confirmation"
-                type="password"
-                placeholder="Passwort bestätigen"
-                class="input-field"
-            />
-            <input
-                v-model="form.title"
-                placeholder="Album Name"
-                class="input-field"
-            />
-            <input
-                v-model="form.pin"
-                placeholder="PIN"
-                class="input-field"
-            />
-
-            <button
-                class="bg-purple-600 text-white px-4 py-2 rounded hover:bg-purple-700 mt-2 w-full"
-                @click="register"
+            <form
+                @submit.prevent="register"
+                class="bg-gray-100 text-gray-800 rounded-2xl shadow-xl p-8 w-full max-w-sm flex flex-col gap-4"
             >
-                Registrieren
-            </button>
+                <input
+                    v-model="form.name"
+                    placeholder="Name"
+                    class="input-field"
+                />
+                <input
+                    v-model="form.email"
+                    type="email"
+                    placeholder="E-Mail"
+                    class="input-field"
+                />
+                <input
+                    v-model="form.password"
+                    type="password"
+                    placeholder="Passwort"
+                    class="input-field"
+                />
+                <input
+                    v-model="form.password_confirmation"
+                    type="password"
+                    placeholder="Passwort bestätigen"
+                    class="input-field"
+                />
+                <input
+                    v-model="form.title"
+                    placeholder="Album Name"
+                    class="input-field"
+                />
+                <input
+                    v-model="form.pin"
+                    placeholder="PIN"
+                    class="input-field"
+                />
 
-            <p v-if="qr_code" class="mt-4 text-center" v-html="qr_code"></p>
-            <p v-if="Object.keys(errors).length" class="text-red-500 mt-2">
-                {{ formatErrors }}
-            </p>
-        </div>
+                <button
+                    type="submit"
+                    class="bg-purple-600 hover:bg-purple-700 text-white font-semibold py-3 rounded-xl transition duration-300 shadow-md w-full"
+                >
+                    Registrieren
+                </button>
+
+                <p v-if="Object.keys(errors).length" class="text-red-500 text-sm mt-2 text-center">
+                    {{ formatErrors }}
+                </p>
+            </form>
     </div>
 </template>
 
@@ -66,7 +68,6 @@ export default {
                 title: '',
                 pin: ''
             },
-            qr_code: null,
             errors: {}
         };
     },
@@ -79,13 +80,12 @@ export default {
         async register() {
             this.errors = {};
             try {
-                await axios.get('/sanctum/csrf-cookie', { withCredentials: true });
+                await axios.get('/sanctum/csrf-cookie', {withCredentials: true});
 
-                const { data } = await axios.post('/api/register', this.form );
-
-                this.qr_code = data.qr_code;
+                const {data} = await axios.post('/api/register', this.form);
 
                 this.$router.push('/dashboard');
+
             } catch (err) {
                 console.error('Axios error:', err);
                 if (err.response) {

@@ -1,40 +1,46 @@
 <template>
-    <section class="bg-gradient-to-r from-purple-700 to-blue-500 text-white text-center py-24 px-5">
-        <div class="max-w-4xl mx-auto">
-            <h1 class="text-5xl font-dancing mb-5">
-                Die Foto-App für deine Hochzeitsgäste
-            </h1>
-            <p class="text-xl mb-8">
-                Alle Bilder deiner Hochzeit einfach teilen und sichern – ganz ohne Stress.
-            </p>
+  <section class="bg-gradient-to-r from-purple-700 to-blue-500 text-white text-center py-24 px-5">
+    <div class="max-w-5xl mx-auto">
 
-            <!-- Main CTA -->
-            <router-link
-                to="/register"
-                class="bg-white text-blue-600 font-bold px-6 py-3 rounded-lg hover:bg-purple-700 hover:text-white transition duration-300"
-            >
-                Jetzt Album erstellen
-            </router-link>
+      <h1 class="text-5xl font-dancing mb-5 drop-shadow-lg">
+        Die Foto-App für deine Hochzeitsgäste
+      </h1>
+      <p class="text-xl mb-10 opacity-90">
+        Alle Bilder deiner Hochzeit einfach teilen und sichern – ganz ohne Stress.
+      </p>
 
-            <!-- Login link for returning owners -->
-            <p class="mt-6 text-sm">
-                Bereits registriert?
-                <router-link to="/login" class="underline hover:text-yellow-300">Zum Login</router-link>
-            </p>
-        </div>
-        <FeatureSection/>
-        <PricingSection/>
-        <ContactSection/>
-    </section>
+      <div class="bg-white text-gray-800 rounded-2xl shadow-xl p-8 max-w-md mx-auto">
+        <h2 class="text-2xl mb-6 font-semibold text-purple-700">
+          Neues Album erstellen
+        </h2>
+        <Register />
+      </div>
+
+      <p class="mt-8 text-sm">
+        Bereits registriert?
+        <router-link
+          to="/login"
+          class="underline hover:text-yellow-300 transition duration-300"
+        >
+          Zum Login
+        </router-link>
+      </p>
+    </div>
+
+    <FeaturesSection class="mt-24" />
+    <PricingSection class="mt-16" />
+    <ContactSection class="mt-16" />
+  </section>
 </template>
 
 <script>
-import FeatureSection from "./FeaturesSection.vue";
+import Register from "./Auth/Register.vue";
+import FeaturesSection from "./FeaturesSection.vue";
 import PricingSection from "./PricingSection.vue";
 import ContactSection from "./ContactSection.vue";
 
-
 export default {
-    components: {PricingSection, ContactSection, FeatureSection}
+  components: {Register, FeaturesSection, PricingSection, ContactSection,
+  },
 };
 </script>

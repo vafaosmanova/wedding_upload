@@ -60,7 +60,7 @@ class AuthController extends Controller
                     'title'   => $album->title,
                     'qr_code' => $album->qr_code,
                 ],
-            ], 201);
+            ]);
 
         } catch (Throwable $e) {
             Log::error('Registration failed: ' . $e->getMessage());
@@ -87,7 +87,6 @@ class AuthController extends Controller
                     'message' => 'Ungültige Zugangsdaten',
                 ], 401);
             }
-
             auth()->login($user);
 
             return response()->json([
@@ -109,3 +108,4 @@ class AuthController extends Controller
         }
     }
 }
+

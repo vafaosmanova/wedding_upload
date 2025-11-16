@@ -34,14 +34,6 @@ class Album extends Model
     {
         return $this->hasOne(Pin::class);
     }
-    public static function findByTitle(string $title)
-    {
-        return self::where('title', $title)->first();
-    }
-    public function getQrCodeSvgAttribute(): string
-    {
-        return $this->qr_code ?? '';
-    }
     public static function createWithQr(array $attributes): self
     {
         $album = self::create($attributes);

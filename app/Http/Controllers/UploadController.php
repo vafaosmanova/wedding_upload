@@ -2,79 +2,65 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Redis;
-use Illuminate\Support\Facades\Storage;
 use App\Models\Album;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class UploadController extends Controller
 {
-    /** Uploads sowohl für Besitzer (Sanctum Session) als auch für Gäste (X-Gast-Token) */
-    public function upload(Request $request, $albumId)
+    // Upload-Funktion für Fotos und Videos
+    public function upload(Request $request, $album_id)
     {
-        $album = Album::findOrFail($albumId);
-        $isGuest = false;
-        $token = $request->header('X-Gast-Token');
+        $request->validate([
+            'photos.*' => 'image|mimes:jpg,jpeg,png|max:5120',  // max 5 MB pro Foto
+            'videos.*' => 'mimes:mp4,mov|max:51200',            // max 50 MB pro Video
+        ]);
 
-        if ($token) {
-            $redisAlbumId = Redis::get("guest_token:{$token}");
-            if (!$redisAlbumId || $redisAlbumId != $albumId) {
-                return response()->json(['message' => 'Unauthorized'], 403);
-            }
-            $isGuest = true;
-        } else {
-            if (!auth()->check() || $album->user_id !== auth()->id()) {
-                return response()->json(['message' => 'Nicht autorisiert'], 403);
-            }
-        }
-        $rules = [
-            'photos.*' => 'image|mimes:jpg,jpeg,png|max:5120', // 5MB
-            'videos.*' => 'mimetypes:video/mp4,video/quicktime|max:51200', // 50MB
-        ];
-        $request->validate($rules);
-
-        $uploadedFiles = ['photos' => [], 'videos' => []];
-
+        $album = Album::findOrFail($album_id);
         $disk = 'hetzner';
-        $approved = !$isGuest;
+        $uploaded = collect();
 
+        // Fotos speichern
         if ($request->hasFile('photos')) {
             foreach ($request->file('photos') as $file) {
-                $path = $file->store('albums/photos', $disk);
-                $photo = $album->photos()->create([
+                $path = $file->store("albums/{$album->id}/photos", $disk);
+                $media = $album->photos()->create([
                     'path' => $path,
                     'filename' => $file->getClientOriginalName(),
-                    'approved' => $approved,
+                    'approved' => true,
                 ]);
-                $uploadedFiles['photos'][] = [
-                    'id' => $photo->id,
-                    'filename' => $photo->filename,
-                    'url' => Storage::disk($disk)->url($photo->path),
-                    'approved' => $photo->approved,
-                ];
+
+                $uploaded->push([
+                    'id' => $media->id,
+                    'filename' => $media->filename,
+                    'url' => Storage::disk($disk)->url($path),
+                    'type' => 'photo',
+                ]);
             }
         }
 
+        // Videos speichern
         if ($request->hasFile('videos')) {
             foreach ($request->file('videos') as $file) {
-                $path = $file->store('albums/videos', $disk);
-                $video = $album->videos()->create([
+                $path = $file->store("albums/{$album->id}/videos", $disk);
+                $media = $album->videos()->create([
                     'path' => $path,
                     'filename' => $file->getClientOriginalName(),
-                    'approved' => $approved,
+                    'approved' => true,
                 ]);
-                $uploadedFiles['videos'][] = [
-                    'id' => $video->id,
-                    'filename' => $video->filename,
-                    'url' => Storage::disk($disk)->url($video->path),
-                    'approved' => $video->approved,
-                ];
+
+                $uploaded->push([
+                    'id' => $media->id,
+                    'filename' => $media->filename,
+                    'url' => Storage::disk($disk)->url($path),
+                    'type' => 'video',
+                ]);
             }
         }
 
         return response()->json([
             'message' => 'Upload erfolgreich',
-            'uploaded' => $uploadedFiles,
+            'media' => $uploaded->values(),
         ]);
     }
 }

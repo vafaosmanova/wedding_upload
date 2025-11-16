@@ -1,4 +1,4 @@
-import { defineConfig } from 'vite';
+import {defineConfig} from 'vite';
 import laravel from 'laravel-vite-plugin';
 import vue from '@vitejs/plugin-vue';
 
@@ -21,18 +21,7 @@ export default defineConfig({
         }),
     ],
     server: {
-        proxy: {
-            '/api': {
-                target: 'http://wedding-upload.test',
-                changeOrigin: true,
-                secure: false,
-            },
-            '/sanctum': {
-                target: 'http://wedding-upload.test',
-                changeOrigin: true,
-                secure: false,
-            },
-        },
+        proxy: {}
     },
     resolve: {
         alias: {
