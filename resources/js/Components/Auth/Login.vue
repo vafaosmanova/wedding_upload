@@ -1,40 +1,40 @@
 <template>
     <section class="bg-gradient-to-r from-purple-700 to-blue-500 text-white text-center py-24 px-5">
-    <div class="flex flex-col items-center justify-center mt-12">
-        <form
-            @submit.prevent="login"
-            class="bg-gray-100 text-gray-800 rounded-2xl shadow-xl p-8 w-full max-w-sm flex flex-col gap-4"
-        >
-            <h2 class="text-2xl text-purple-700 mb-4 font-semibold text-center">
-                Login
-            </h2>
-
-            <input
-                v-model="form.email"
-                type="email"
-                placeholder="E-Mail"
-                class="input-field"
-            />
-            <input
-                v-model="form.password"
-                type="password"
-                placeholder="Passwort"
-                class="input-field"
-            />
-
-            <button
-                type="submit"
-                class="bg-purple-600 hover:bg-purple-700 text-white font-semibold py-3 rounded-xl shadow-md transition duration-300"
+        <div class="flex flex-col items-center justify-center mt-12">
+            <form
+                @submit.prevent="login"
+                class="bg-gray-100 text-gray-800 rounded-2xl shadow-xl p-8 w-full max-w-sm flex flex-col gap-4"
             >
-                Login
-            </button>
+                <h2 class="text-2xl text-purple-700 mb-4 font-semibold text-center">
+                    Login
+                </h2>
 
-            <!-- Ошибки -->
-            <p v-if="error" class="text-red-500 text-sm mt-2 text-center">
-                {{ error }}
-            </p>
-        </form>
-    </div>
+                <input
+                    v-model="form.email"
+                    type="email"
+                    placeholder="E-Mail"
+                    class="input-field"
+                />
+                <input
+                    v-model="form.password"
+                    type="password"
+                    placeholder="Passwort"
+                    class="input-field"
+                />
+
+                <button
+                    type="submit"
+                    class="bg-purple-600 hover:bg-purple-700 text-white font-semibold py-3 rounded-xl shadow-md transition duration-300"
+                >
+                    Login
+                </button>
+
+                <!-- Ошибки -->
+                <p v-if="error" class="text-red-500 text-sm mt-2 text-center">
+                    {{ error }}
+                </p>
+            </form>
+        </div>
     </section>
 </template>
 
@@ -44,7 +44,7 @@ import axios from "axios";
 export default {
     data() {
         return {
-            form: { email: "", password: "" },
+            form: {email: "", password: ""},
             error: "",
         };
     },
@@ -52,7 +52,7 @@ export default {
         async login() {
             this.error = "";
             try {
-                await axios.get("/sanctum/csrf-cookie", { withCredentials: true });
+                await axios.get("/sanctum/csrf-cookie", {withCredentials: true});
 
                 const res = await axios.post("/api/login", {
                     email: this.form.email,

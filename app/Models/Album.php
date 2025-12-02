@@ -56,6 +56,10 @@ class Album extends Model
     {
         return $this->hasMany(Photo::class);
     }
+    public function media(): HasMany
+    {
+        return $this->hasMany(Media::class);
+    }
     public function videos(): HasMany
     {
         return $this->hasMany(Video::class);

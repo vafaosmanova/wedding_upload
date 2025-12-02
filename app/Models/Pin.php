@@ -11,7 +11,10 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  */
 class Pin extends Model
 {
-    protected $fillable = ['album_id', 'pin'];
+    protected $fillable = [
+        'album_id',
+        'pin'
+    ];
 
     public function album(): BelongsTo
     {

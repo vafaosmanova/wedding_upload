@@ -44,20 +44,20 @@ return [
             'throw' => false,
             'report' => false,
         ],
-        /*'hetzner' => [
+        'hetzner' => [
             'driver' => 'sftp',
             'host' => env('HETZNER_HOST'),
             'username' => env('HETZNER_USERNAME'),
             'password' => env('HETZNER_PASSWORD'),
             'root' => env('HETZNER_ROOT', '/'),
             'url' => env('HETZNER_URL'),
-            'port' => intval(env('HETZNER_PORT',22,)),
+            'port' => intval(env('HETZNER_PORT',22)),
             'timeout' => 30,
-        ],*/
-        'hetzner' => [
+        ],
+     /*   'hetzner' => [
             'driver' => 'local',
             'root' => env('HETZNER_ROOT', storage_path('app/hetzner')),
-        ],
+        ],*/
     ],
     /*
     |--------------------------------------------------------------------------

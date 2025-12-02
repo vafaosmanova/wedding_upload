@@ -1,22 +1,41 @@
 <?php
 
 namespace App\Traits;
+
+use Illuminate\Support\Facades\Route;
+
 trait MediaFormatter
 {
-    public function formatMediaCollection($media, string $type)
+    public function formatMediaCollectionGuest($media, string $type)
     {
+        $routeName = 'guest.media.stream';
         return $media->map(fn($m) => [
-            'id'       => $m->id,
-            'name'     => $m->filename,
-            'url'      => route('api.media.show', [
+            'id' => $m->id,
+            'filename' => $m->filename,
+            'url' => route($routeName, [
                 'album_id' => $m->album_id,
-                'filename' => $m->filename,
+                'type' => $type,
+                'media_id' => $m->id
             ]),
             'approved' => $m->approved,
             'type'     => $type,
         ]);
     }
+    public function formatMediaCollectionOwner($media, string $type, string $routeName = null)
+    {
+        $routeName = $routeName ?? 'owner.media.stream';
 
-
-
+        return $media->map(fn($m) => [
+            'id' => $m->id,
+            'filename' => $m->filename,
+            'url' => route($routeName, [
+                'album_id' => $m->album_id,
+                'type' => $type,
+                'media_id' => $m->id
+            ]),
+            'approved' => $m->approved,
+            'type'     => $type,
+        ]);
+    }
 }
+

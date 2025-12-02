@@ -82,7 +82,7 @@ export default {
             try {
                 await axios.get('/sanctum/csrf-cookie', {withCredentials: true});
 
-                const {data} = await axios.post('/api/register', this.form);
+                await axios.post('/api/register', this.form);
 
                 this.$router.push('/dashboard');
 
@@ -91,6 +91,8 @@ export default {
                 if (err.response) {
                     if (err.response.status === 422) {
                         this.errors = err.response.data.errors || {};
+                        this.form.password = "";
+                        this.form.password_confirmation = "";
                     } else {
                         alert(`Fehler: ${err.response.status} - ${JSON.stringify(err.response.data)}`);
                     }
@@ -110,5 +112,8 @@ export default {
     margin-bottom: 8px;
     border: 1px solid #ccc;
     border-radius: 6px;
+}
+.font-lila {
+    font-family: "Lila", sans-serif;
 }
 </style>

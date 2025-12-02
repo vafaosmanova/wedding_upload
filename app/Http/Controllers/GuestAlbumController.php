@@ -3,18 +3,20 @@
 namespace App\Http\Controllers;
 
 use App\Models\Album;
+use App\Models\Media;
 use App\Models\Pin;
 use App\Traits\MediaFormatter;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redis;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 use Random\RandomException;
 
 class GuestAlbumController extends Controller
 {
     use MediaFormatter;
 
-    /** Öffentliche Albumansicht für Gäste (via QR-Code) */
     public function show($album_id)
     {
         $album = Album::with('pin')->findOrFail($album_id);
@@ -27,7 +29,7 @@ class GuestAlbumController extends Controller
         ]);
     }
 
-    /** PIN-Verifizierung und Ausgabe eines temporären Tokens (24 Stunden gültig)
+    /**
      * @throws RandomException
      */
     public function verifyPin(Request $request, $album_id)
@@ -58,38 +60,45 @@ class GuestAlbumController extends Controller
             'token' => $token,
         ]);
     }
-    /** Zeigt alle genehmigten Medien für Gäste mit gültigem Token */
+
     public function media(Request $request, $album_id)
     {
-        $token = $request->header('X-Gast-Token');
-        if (!$token) {
-            return response()->json(['message' => 'Unauthorized'], 401);
-        }
-
+        $token = $request->header('Guest-Token');
         $redisAlbumId = Redis::get("guest_token:{$token}");
-        if (!$redisAlbumId || $redisAlbumId != $album_id) {
+        if (!$token || !$redisAlbumId || $redisAlbumId != $album_id) {
             return response()->json(['message' => 'Unauthorized'], 401);
         }
 
-        $album = Album::findOrFail($album_id);
+        $media = Media::where('album_id', $album_id)
+            ->where('approved', true)
+            ->get();
 
-        $photos = $this->formatMediaCollection(
-            $album->photos()->where('approved', true)->get(),
-            'image'
+        $type = 'image';
+        $formatted = $this->formatMediaCollectionGuest(
+            $media->map(function($item) use (&$type) {
+                $type = Str::startsWith($item->mime_type, 'video/') ? 'video' : 'image';
+                return $item;
+            }),
+            $type
         );
 
-        $videos = $this->formatMediaCollection(
-            $album->videos()->where('approved', true)->get(),
-            'video'
-        );
+        return response()->json(['media' => $formatted]);
+        }
+    public function streamMedia(Request $request, $album_id, $media_id)
+    {
+        $token = $request->header('Guest-Token');
+        $redisAlbumId = Redis::get("guest_token:{$token}");
+        if (!$token || !$redisAlbumId || $redisAlbumId != $album_id) {
+            return response()->json(['message' => 'Unauthorized'], 401);
+        }
+        $media = Media::findOrFail($media_id);
 
-        // Добавляем album_id в каждый объект
-        $media = $photos->concat($videos)->map(fn($m) => [
-            ...$m->toArray(),
-            'album_id' => $album_id,
-        ])->values();
+        if (!Storage::disk('hetzner')->exists($media->path)) {
+            abort(404, 'File not found');
+        }
 
-        return response()->json(['media' => $media]);
+        $file = Storage::disk('hetzner')->get($media->path);
+        return response($file, 200)->header('Content-Type', $media->mime_type)
+            ->header('Content-Disposition', 'inline');
     }
-
 }

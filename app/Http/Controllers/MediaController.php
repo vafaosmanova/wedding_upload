@@ -2,99 +2,104 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Album;
-use App\Models\Photo;
-use App\Models\Video;
-use Illuminate\Http\Request;
+use App\Models\Media;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
+use App\Traits\MediaFormatter;
 
 class MediaController extends Controller
 {
-    // Alle genehmigten Medien eines Albums anzeigen
+    use MediaFormatter;
+
+    /**
+     * Genehmigte Medien eines Albums
+     */
     public function index($album_id)
     {
-        $photos = Photo::where('album_id', $album_id)->where('approved', true)->get();
-        $videos = Video::where('album_id', $album_id)->where('approved', true)->get();
+        $media = Media::where('album_id', $album_id)
+            ->where('approved', true)
+            ->get();
 
-        $media = $photos->map(fn($p) => [
-            'id' => $p->id,
-            'filename' => $p->filename,
-            'type' => 'photo',
-            'url' => Storage::disk('hetzner')->url($p->path)
-        ])->concat(
-            $videos->map(fn($v) => [
-                'id' => $v->id,
-                'filename' => $v->filename,
-                'type' => 'video',
-                'url' => Storage::disk('hetzner')->url($v->path)
-            ])
+        $type = 'image';
+        $formatted = $this->formatMediaCollectionOwner(
+            $media->map(function ($item) use (&$type) {
+                $type = Str::startsWith($item->mime_type, 'video/') ? 'video' : 'image';
+                return $item;
+            }),
+            $type
         );
 
-        return response()->json(['media' => $media->values()]);
+        return response()->json(['media' => $formatted]);
     }
 
-    // Datei herunterladen / anzeigen
-    public function show($album_id, $filename)
+    /**
+     * Medien in Genehmigungswarteschlange
+     */
+    public function pending($album_id)
     {
-        $disk = 'hetzner';
-        $path = "albums/{$album_id}/{$filename}";
+        $media = Media::where('album_id', $album_id)
+            ->where('approved', false)
+            ->get();
 
-        if (!Storage::disk($disk)->exists($path)) {
-            abort(404, "Datei {$filename} nicht gefunden");
-        }
+        $type = 'image';
+        $formatted = $this->formatMediaCollectionOwner(
+            $media->map(function ($item) use (&$type) {
+                $type = Str::startsWith($item->mime_type, 'video/') ? 'video' : 'image';
+                return $item;
+            }),
+            $type
+        );
 
-        return response()->file(Storage::disk($disk)->path($path));
+        return response()->json(['media' => $formatted]);
     }
 
-    // Upload von Fotos/Videos
-    public function upload(Request $request, $album_id)
+    /**
+     * Genehmigen
+     */
+    public function approve($id)
     {
-        $request->validate([
-            'photos.*' => 'image|mimes:jpg,jpeg,png|max:5120',
-            'videos.*' => 'mimes:mp4,mov|max:51200',
-        ]);
-
-        $album = Album::findOrFail($album_id);
-
-        $uploaded = collect();
-
-        if ($request->hasFile('photos')) {
-            foreach ($request->file('photos') as $file) {
-                $path = $file->store("albums/{$album->id}/photos", 'hetzner');
-                $media = $album->photos()->create([
-                    'path' => $path,
-                    'filename' => $file->getClientOriginalName(),
-                    'approved' => true
-                ]);
-                $uploaded->push([
-                    'id' => $media->id,
-                    'filename' => $media->filename,
-                    'url' => Storage::disk('hetzner')->url($path),
-                    'type' => 'photo'
-                ]);
-            }
+        $media = Media::find($id);
+        if (!$media) {
+            return response()->json(['message' => 'Media not found'], 404);
         }
 
-        if ($request->hasFile('videos')) {
-            foreach ($request->file('videos') as $file) {
-                $path = $file->store("albums/{$album->id}/videos", 'hetzner');
-                $media = $album->videos()->create([
-                    'path' => $path,
-                    'filename' => $file->getClientOriginalName(),
-                    'approved' => true
-                ]);
-                $uploaded->push([
-                    'id' => $media->id,
-                    'filename' => $media->filename,
-                    'url' => Storage::disk('hetzner')->url($path),
-                    'type' => 'video'
-                ]);
-            }
+        $media->approved = true;
+        $media->save();
+
+        return response()->json(['message' => 'Media approved']);
+    }
+
+    /**
+     * Löschen
+     */
+    public function destroy($id)
+    {
+        $media = Media::find($id);
+        if (!$media) {
+            return response()->json(['message' => 'Media not found'], 404);
         }
 
-        return response()->json([
-            'message' => 'Upload erfolgreich',
-            'media' => $uploaded->values()
-        ]);
+        if (Storage::disk('hetzner')->exists($media->path)) {
+            Storage::disk('hetzner')->delete($media->path);
+        }
+
+        $media->delete();
+        return response()->json(['message' => 'Media deleted']);
+    }
+
+    /**
+     * Streamen für Owner/Gast
+     */
+    public function streamOwnerMedia($media_id)
+    {
+        $media = Media::findOrFail($media_id);
+
+        if (!Storage::disk('hetzner')->exists($media->path)) {
+            abort(404, 'File not found');
+        }
+
+        $file = Storage::disk('hetzner')->get($media->path);
+        return response($file, 200)->header('Content-Type', $media->mime_type)
+            ->header('Content-Disposition', 'inline');
     }
 }

@@ -1,25 +1,39 @@
 <template>
-    <div class="p-4">
-        <h3 class="text-lg font-semibold mb-4">Mediengalerie</h3>
+    <div class="p-4 font-lila">
+        <h3 class="text-2xl text-purple-600 mb-4">Mediengalerie</h3>
 
-        <!-- Upload -->
-        <input type="file" multiple @change="handleUpload" class="mb-4" />
-        <button @click="submitUpload" :disabled="!uploadFiles.length" class="bg-green-600 text-white px-4 py-2 rounded">
-            Upload starten
+        <input
+            type="file"
+            id="mediaFiles"
+            name="mediaFiles"
+            multiple
+            @change="handleUpload"
+            class="mb-4 border p-2 rounded"
+        />
+
+        <button
+            @click="submitUpload"
+            :disabled="!uploadFiles.length"
+            class="bg-green-600 text-white px-4 py-2 rounded disabled:opacity-50"
+        >
+            Hochladen
         </button>
 
-        <!-- Vorschau & Medien -->
         <div class="grid grid-cols-3 gap-4 mt-4" v-if="mediaList.length">
             <div v-for="m in mediaList" :key="m.id" class="border p-2 rounded">
-                <img v-if="m.type === 'photo'" :src="m.url" class="w-full h-32 object-cover rounded" />
+                <img
+                    v-if="m.type === 'image'"
+                    :src="m.url"
+                    class="w-full h-32 object-cover rounded"
+                    alt="image"
+                />
+
                 <video v-else controls class="w-full h-32 rounded">
-                    <source :src="m.url" :type="m.type" />
+                    <source :src="m.url" :type="m.mime"/>
                 </video>
-                <div class="text-sm mt-1">{{ m.filename }}</div>
+
             </div>
         </div>
-
-        <div v-else class="text-gray-500 mt-4">Keine Medien vorhanden.</div>
     </div>
 </template>
 
@@ -27,38 +41,84 @@
 import axios from "axios";
 
 export default {
-    props: { albumId: { type: [String, Number], required: true } },
+    props: {
+        albumId: {type: [String, Number], required: true},
+        guestToken: {type: String, default: null}
+    },
+
     data() {
         return {
             mediaList: [],
-            uploadFiles: [],
+            uploadFiles: []
         };
     },
+
+    computed: {
+        mediaEndpoint() {
+            return this.guestToken
+                ? `/api/guest/${this.albumId}/media`
+                : `/api/albums/${this.albumId}/media`;
+        },
+
+        uploadEndpoint() {
+            return this.guestToken
+                ? `/api/guest/${this.albumId}/upload`
+                : `/api/albums/${this.albumId}/upload`;
+        }
+    },
+
     mounted() {
         this.loadMedia();
     },
+
     methods: {
         async loadMedia() {
             try {
-                const res = await axios.get(`/api/albums/${this.albumId}/media`);
-                this.mediaList = res.data.media;
-            } catch (err) {
-                console.error(err);
+                const config = {
+                    headers: this.guestToken ? {"Guest-Token": this.guestToken} : {}
+                };
+
+                const res = await axios.get(this.mediaEndpoint, config);
+                this.mediaList = res.data.media.map(item => ({
+                    ...item,
+                    mime: item.mime_type,
+                    url: `/api/media/${item.id}/stream`
+                }));
+            } catch (error) {
+                console.error("Fehler beim Laden der Medien:", error);
             }
         },
+
         handleUpload(e) {
             this.uploadFiles = Array.from(e.target.files || []);
         },
+
         async submitUpload() {
             if (!this.uploadFiles.length) return;
-
             const fd = new FormData();
-            this.uploadFiles.forEach(f => fd.append(f.type.startsWith('image') ? 'photos[]' : 'videos[]', f));
+            this.uploadFiles.forEach((file) => {
+                if (file.type.startsWith("image")) {
+                    fd.append("photos[]", file);
+                } else {
+                    fd.append("videos[]", file);
+                }
+            });
+            try {
+                const config = {
+                    headers: this.guestToken ? {"Guest-Token": this.guestToken} : {}
+                };
 
-            await axios.post(`/api/albums/${this.albumId}/upload`, fd, { withCredentials: true });
-            this.uploadFiles = [];
-            this.loadMedia();
+                await axios.post(this.uploadEndpoint, fd, config);
+                await this.loadMedia();
+                this.$emit('uploaded');
+
+            } catch (error) {
+                console.error("Fehler beim Upload:", error);
+            }
         }
     }
 };
 </script>
+<style scoped>
+.font-lila { font-family: "Lila", sans-serif; }
+</style>

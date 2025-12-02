@@ -18,11 +18,12 @@ class AlbumController extends Controller
         $albums = Album::where('user_id', auth()->id())->get();
         return response()->json($albums);
     }
+
     public function store(Request $request)
     {
         $request->validate([
             'title' => 'required|string|max:255',
-            'pin'   => 'required|string|min:4|max:10',
+            'pin' => 'required|string|min:4|max:10',
         ]);
 
         $titleExists = Album::where('title', $request->title)
@@ -41,19 +42,19 @@ class AlbumController extends Controller
 
         try {
             $album = Album::createWithQr([
-                'title'    => $request->title,
-                'user_id'  => auth()->id(),
+                'title' => $request->title,
+                'user_id' => auth()->id(),
             ]);
 
             Pin::create([
-                'pin'       => $request->pin,
-                'album_id'  => $album->id,
+                'pin' => $request->pin,
+                'album_id' => $album->id,
             ]);
 
             return response()->json([
-                'album'    => $album,
-                'qr_code'  => $album->qr_code,
-                'pin'      => $request->pin,
+                'album' => $album,
+                'qr_code' => $album->qr_code,
+                'pin' => $request->pin,
             ], 201);
 
         } catch (Throwable $e) {
@@ -65,8 +66,10 @@ class AlbumController extends Controller
     public function update(Request $request, $album_id)
     {
         $album = Album::findOrFail($album_id);
-        $request->validate(['title' => 'nullable|string|max:255', 'pin' => 'nullable|string|min:4|max:10']);
-        $album->update($request->only(['title', 'pin']));
+        if ($album->user_id !== auth()->id()) {
+            $request->validate(['title' => 'nullable|string|max:255', 'pin' => 'nullable|string|min:4|max:10']);
+            $album->update($request->only(['title', 'pin']));
+        }
         return response()->json(['message' => 'Album aktualisiert', 'album' => $album]);
     }
 
@@ -76,14 +79,9 @@ class AlbumController extends Controller
         if ($album->user_id !== auth()->id()) {
             return response()->json(['message' => 'Nicht autorisiert'], 403);
         }
-
-        foreach ($album->photos as $photo) {
-            Storage::disk('hetzner')->delete($photo->path);
+        foreach ($album->media as $mediaItem) {
+            Storage::disk('hetzner')->delete($mediaItem->path);
         }
-        foreach ($album->videos as $video) {
-            Storage::disk('hetzner')->delete($video->path);
-        }
-
         $album->delete();
         return response()->json(['message' => 'Album gelöscht']);
     }
@@ -93,35 +91,69 @@ class AlbumController extends Controller
         $album = Album::findOrFail($album_id);
 
         if ($album->user_id !== auth()->id()) {
-            Log::warning("Unauthorized export attempt for album {$album_id} by user " . auth()->id());
             return response()->json(['message' => 'Nicht autorisiert'], 403);
         }
 
         $redisKey = "album_export_progress:{$album_id}";
 
         try {
+            // сброс прогресса
             Redis::set($redisKey, 0);
+
+            // запуск background job
             ExportAlbumJob::dispatch($album_id)->onQueue('exports');
 
-            Log::info("ExportAlbumJob dispatched for album ID {$album_id} by user " . auth()->id());
-
             return response()->json([
-                'message'  => 'Export gestartet',
+                'message' => 'Export gestartet',
                 'album_id' => $album_id,
             ]);
 
         } catch (Throwable $e) {
-            Log::error("Failed to dispatch ExportAlbumJob for album {$album_id}: {$e->getMessage()}");
+            // Ошибка! Устанавливаем специальный код состояния "-1"
             Redis::set($redisKey, -1);
             return response()->json(['message' => 'Fehler beim Starten des Exports'], 500);
         }
     }
 
+
     public function progress(int $album_id)
     {
         $progress = Redis::get("album_export_progress:{$album_id}");
-        $progress = is_numeric($progress) ? (int) $progress : 0;
 
-        return response()->json(['progress' => $progress]);
+        if (!is_numeric($progress)) {
+            $progress = 0;
+        }
+
+        return response()->json(['progress' => (int)$progress]);
     }
+
+    /**
+     * Новый endpoint для скачивания ZIP
+     * SFTP НЕ умеет раздавать файлы напрямую, поэтому Laravel скачивает.
+     */
+    public function downloadZip(int $album_id)
+    {
+        $album = Album::findOrFail($album_id);
+
+        if ($album->user_id !== auth()->id()) {
+            return response()->json(['message' => 'Nicht autorisiert'], 403);
+        }
+
+        $path = "albums/{$album_id}/exports/album_{$album_id}.zip";
+
+        if (!Storage::disk('hetzner')->exists($path)) {
+            return response()->json(['message' => 'ZIP noch nicht verfügbar'], 404);
+        }
+
+        // читаем файл через SFTP
+        $binary = Storage::disk('hetzner')->get($path);
+
+        return response($binary, 200, [
+            'Content-Type' => 'application/zip',
+            'Content-Length' => strlen($binary),
+            'Content-Disposition' => "attachment; filename=album_{$album_id}.zip",
+            'Cache-Control' => 'no-cache, must-revalidate',
+        ]);
+    }
+
 }

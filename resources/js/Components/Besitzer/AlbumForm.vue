@@ -49,15 +49,6 @@ export default {
                 let qr_code = payload.qr_code ?? null;
                 let pin = payload.pin ?? this.pin ?? null;
 
-                if (!qr_code && albumObj && albumObj.id) {
-                    try {
-                        const qrRes = await axios.get(`/api/albums/${albumObj.id}/qrcode`, { withCredentials: true });
-                        qr_code = qrRes.data.qr_code;
-                        pin = qrRes.data.pin ?? pin;
-                    } catch (e) {
-                    }
-                }
-
                 this.message = "Album erfolgreich erstellt!";
 
                 this.$emit("albumCreated", { album: albumObj, qr_code, pin });

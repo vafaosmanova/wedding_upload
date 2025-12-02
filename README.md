@@ -21,7 +21,6 @@ Gäste
 > Zeitfristiger Zugriff (Token über Redis, 24 St. gültig)
 > Fotos & Videos anzeigen oder hochladen
 
-
 ## Technologien
 
 > Laravel 12, PHP 8.2
