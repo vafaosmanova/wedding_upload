@@ -26,10 +26,6 @@ class Photo extends Model
     ];
     protected $appends = ['url'];
 
-    public function getUrlAttribute()
-    {
-        return Storage::disk(config('filesystems.default'))->url($this->path);
-    }
     public function album(): BelongsTo
     {
         return $this->belongsTo(Album::class);

@@ -20,7 +20,11 @@
         </button>
 
         <div class="grid grid-cols-3 gap-4 mt-4" v-if="mediaList.length">
-            <div v-for="m in mediaList" :key="m.id" class="border p-2 rounded">
+            <div v-for="m in mediaList" :key="m.id" class="border p-2 rounded relative"
+                 :class="m.approved ? 'border-green-600 border-4' : 'border-gray-300'">
+                <div v-if="m.approved"
+                     class="absolute top-1 right-1 bg-green-600 text-white rounded-full px-2 py-1 text-xs">
+                </div>
                 <img
                     v-if="m.type === 'image'"
                     :src="m.url"
@@ -81,6 +85,7 @@ export default {
                 const res = await axios.get(this.mediaEndpoint, config);
                 this.mediaList = res.data.media.map(item => ({
                     ...item,
+                    approved: item.approved ?? false,
                     mime: item.mime_type,
                     url: `/api/media/${item.id}/stream`
                 }));
@@ -115,10 +120,13 @@ export default {
             } catch (error) {
                 console.error("Fehler beim Upload:", error);
             }
-        }
+        },
+
     }
 };
 </script>
 <style scoped>
-.font-lila { font-family: "Lila", sans-serif; }
+.font-lila {
+    font-family: "Lila", sans-serif;
+}
 </style>

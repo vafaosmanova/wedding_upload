@@ -36,7 +36,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/albums/{album_id}/export/progress', [AlbumController::class, 'progress']);
     Route::get('/albums/{album_id}/export/download', [AlbumController::class, 'downloadZip']);
     //MEDIA LIST (owner)
-    Route::get('/albums/{album_id}/media', [MediaController::class, 'index']);
+    Route::get('/albums/{album_id}/media', [MediaController::class, 'pending']);
     //MEDIA STREAM (owner)
     Route::get('/media/{media_id}/stream', [MediaController::class, 'streamOwnerMedia'])
         ->name('owner.media.stream');

@@ -29,7 +29,6 @@
                     Login
                 </button>
 
-                <!-- Ошибки -->
                 <p v-if="error" class="text-red-500 text-sm mt-2 text-center">
                     {{ error }}
                 </p>

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Media;
+use Illuminate\Support\Facades\Redis;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use App\Traits\MediaFormatter;
@@ -10,28 +11,6 @@ use App\Traits\MediaFormatter;
 class MediaController extends Controller
 {
     use MediaFormatter;
-
-    /**
-     * Genehmigte Medien eines Albums
-     */
-    public function index($album_id)
-    {
-        $media = Media::where('album_id', $album_id)
-            ->where('approved', true)
-            ->get();
-
-        $type = 'image';
-        $formatted = $this->formatMediaCollectionOwner(
-            $media->map(function ($item) use (&$type) {
-                $type = Str::startsWith($item->mime_type, 'video/') ? 'video' : 'image';
-                return $item;
-            }),
-            $type
-        );
-
-        return response()->json(['media' => $formatted]);
-    }
-
     /**
      * Medien in Genehmigungswarteschlange
      */
@@ -56,6 +35,7 @@ class MediaController extends Controller
     /**
      * Genehmigen
      */
+
     public function approve($id)
     {
         $media = Media::find($id);
@@ -66,8 +46,11 @@ class MediaController extends Controller
         $media->approved = true;
         $media->save();
 
+        Redis::sadd("album:{$media->album_id}:approved", $media->id);
+
         return response()->json(['message' => 'Media approved']);
     }
+
 
     /**
      * Löschen
@@ -88,7 +71,7 @@ class MediaController extends Controller
     }
 
     /**
-     * Streamen für Owner/Gast
+     * Streamen für Besitzer
      */
     public function streamOwnerMedia($media_id)
     {

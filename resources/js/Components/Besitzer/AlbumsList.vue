@@ -41,7 +41,7 @@ export default {
 
             try {
                 await axios.put(`/api/albums/${albumId}`, daten, { withCredentials: true });
-                this.$emit("aktualisiert"); // tell parent to reload albums
+                this.$emit("aktualisiert");
             } catch (err) {
                 console.error("Fehler beim Bearbeiten:", err);
             }
@@ -51,7 +51,7 @@ export default {
             if (!confirm("Möchten Sie dieses Album wirklich löschen?")) return;
             try {
                 await axios.delete(`/api/albums/${albumId}`, { withCredentials: true });
-                this.$emit("aktualisiert"); // tell parent to reload albums
+                this.$emit("aktualisiert");
             } catch (err) {
                 console.error("Fehler beim Löschen:", err);
             }

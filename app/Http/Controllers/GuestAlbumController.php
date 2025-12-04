@@ -70,7 +70,7 @@ class GuestAlbumController extends Controller
         }
 
         $media = Media::where('album_id', $album_id)
-            ->where('approved', true)
+            ->where('approved', false)
             ->get();
 
         $type = 'image';
@@ -97,7 +97,7 @@ class GuestAlbumController extends Controller
             abort(404, 'File not found');
         }
 
-        $file = Storage::disk('hetzner')->get($media->path);
+        $file = Storage::disk('hetzner')->response($media->path);
         return response($file, 200)->header('Content-Type', $media->mime_type)
             ->header('Content-Disposition', 'inline');
     }

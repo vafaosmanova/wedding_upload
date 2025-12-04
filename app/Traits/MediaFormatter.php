@@ -17,7 +17,7 @@ trait MediaFormatter
                 'type' => $type,
                 'media_id' => $m->id
             ]),
-            'approved' => $m->approved,
+            'approved' => false,
             'type'     => $type,
         ]);
     }
@@ -33,7 +33,7 @@ trait MediaFormatter
                 'type' => $type,
                 'media_id' => $m->id
             ]),
-            'approved' => $m->approved,
+            'approved' => false,
             'type'     => $type,
         ]);
     }

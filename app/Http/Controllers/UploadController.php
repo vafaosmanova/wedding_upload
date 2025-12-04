@@ -32,7 +32,7 @@ class UploadController extends Controller
                     'path'      => $path,
                     'filename'  => $file->getClientOriginalName(),
                     'mime_type' => $file->getMimeType(),
-                    'approved'  => true,
+                    'approved'  => false,
                 ]);
 
                 $uploaded->push(
@@ -49,7 +49,7 @@ class UploadController extends Controller
                     'path'      => $path,
                     'filename'  => $file->getClientOriginalName(),
                     'mime_type' => $file->getMimeType(),
-                    'approved'  => true,
+                    'approved'  => false,
                 ]);
 
                 $uploaded->push(

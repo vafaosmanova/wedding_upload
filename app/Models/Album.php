@@ -30,10 +30,6 @@ class Album extends Model
         'qr_code',
     ];
 
-    public function pin(): HasOne
-    {
-        return $this->hasOne(Pin::class);
-    }
     public static function createWithQr(array $attributes): self
     {
         $album = self::create($attributes);
@@ -43,26 +39,17 @@ class Album extends Model
         $album->save();
         return $album;
     }
-    public function getFileUrl($path): string
-    {
-        return Storage::disk('sftp')->url($path);
-    }
-
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
-    }
-    public function photos(): HasMany
-    {
-        return $this->hasMany(Photo::class);
     }
     public function media(): HasMany
     {
         return $this->hasMany(Media::class);
     }
-    public function videos(): HasMany
+    public function pin(): HasOne
     {
-        return $this->hasMany(Video::class);
+        return $this->hasOne(Pin::class);
     }
     public function sharedUsers(): BelongsToMany
     {
