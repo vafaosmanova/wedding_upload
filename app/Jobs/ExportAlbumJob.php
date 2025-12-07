@@ -32,8 +32,8 @@ class ExportAlbumJob implements ShouldQueue
 
         try {
             $mediaIds = Redis::smembers("album:{$this->albumId}:approved_media");
-
-            if (empty($mediaIds)) {
+            $mediaIds = array_map('intval', $mediaIds);
+            if (!$mediaIds) {
                 Redis::set($redisKey, 100);
                 Log::info("Keine Medien für Album {$this->albumId} gefunden.");
                 return;
@@ -50,10 +50,7 @@ class ExportAlbumJob implements ShouldQueue
             foreach ($mediaIds as $index => $id) {
                 $media = Media::find($id);
 
-                if (!$media) {
-                    Log::warning("Medium ID {$id} nicht gefunden. Überspringe.");
-                    continue;
-                }
+                if (!$media) continue;
 
                 $path = $media->path;
                 $filename = $media->filename ?? basename($path);
@@ -101,7 +98,7 @@ class ExportAlbumJob implements ShouldQueue
                 return;
             }
 
-            $remotePath = "albums/{$this->albumId}/exports/album_{$this->albumId}.zip";
+            $remotePath = "albums/{$this->albumId}/exports/album.zip";
 
             $uploadStream = fopen($zipPath, 'r');
             Storage::disk($disk)->put($remotePath, $uploadStream);

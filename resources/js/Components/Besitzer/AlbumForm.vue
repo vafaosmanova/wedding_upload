@@ -47,7 +47,7 @@ export default {
 
                 let albumObj = payload.album ?? payload;
                 let qr_code = payload.qr_code ?? null;
-                let pin = payload.pin ?? this.pin ?? null;
+                let pin = payload.pin ?? this.pin;
 
                 this.message = "Album erfolgreich erstellt!";
 

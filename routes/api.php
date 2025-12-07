@@ -14,12 +14,8 @@ Route::get('/debug', function (Request $request) {
         'auth_check' => auth()->check(),
         'auth_id' => auth()->id(),
         'session_token' => session()->token(),
-        ];
+    ];
 });
-
-Route::get('test', fn() => response()->json(['message' => 'Hello world']));
-//QR-CODE
-Route::get('/albums/{album_id}/qrcode', [QRCodeController::class, 'show']);
 //AUTH
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login'])->name('api.login');
@@ -29,6 +25,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/albums', [AlbumController::class, 'store']);
     Route::put('/albums/{album_id}', [AlbumController::class, 'update']);
     Route::delete('/albums/{album_id}', [AlbumController::class, 'destroy']);
+    //QR-CODE
+    Route::get('/albums/{album_id}/qrcode', [QRCodeController::class, 'show']);
     //UPLOAD
     Route::post('/albums/{album_id}/upload', [UploadController::class, 'upload']);
     //EXPORT
@@ -42,7 +40,7 @@ Route::middleware('auth:sanctum')->group(function () {
         ->name('owner.media.stream');
     //PENDING MEDIA
     Route::get('/media/pending/{album_id}', [MediaController::class, 'pending']);
-    Route::post('/media/{mediaId}/approve', [MediaController::class, 'approve']);
+    Route::post('/media/{media_id}/approve', [MediaController::class, 'approve']);
     //DELETE MEDIA
     Route::delete('/media/{media_id}', [MediaController::class, 'destroy']);
 });
@@ -53,5 +51,6 @@ Route::prefix('guest')->group(function () {
     Route::get('/{album_id}', [GuestAlbumController::class, 'show']);
     Route::post('/{album_id}/verify-pin', [GuestAlbumController::class, 'verifyPin']);
     Route::get('/{album_id}/media', [GuestAlbumController::class, 'media']);
+    Route::get('/albums/{album_id}/guest/download', [GuestAlbumController::class, 'downloadZip']);
     Route::post('/{album_id}/upload', [UploadController::class, 'upload'])->defaults('isGuest', true);
 });

@@ -2,29 +2,46 @@
     <div class="p-4 font-lila">
         <h3 class="text-2xl text-purple-600 mb-4">Mediengalerie</h3>
 
+
         <input
             type="file"
-            id="mediaFiles"
+            id="hiddenFileInput"
             name="mediaFiles"
             multiple
-            @change="handleUpload"
-            class="mb-4 border p-2 rounded"
+            @change="onFilesSelected"
+            class="hidden"
         />
 
+
         <button
-            @click="submitUpload"
-            :disabled="!uploadFiles.length"
+            @click="triggerFileDialog"
             class="bg-green-600 text-white px-4 py-2 rounded disabled:opacity-50"
         >
             Hochladen
         </button>
+        <button
+            v-if="newMediaAvailable"
+            @click="refreshGallery"
+            class="px-4 py-2 rounded mb-4"
+            :class="newMediaAvailable ? 'bg-green-600 text-white' : 'bg-blue-600 text-white'"
+        >
+            Liste aktualisieren
+            <span v-if="newMediaAvailable" class="ml-2 text-xs bg-white text-green-600 px-1 rounded-full">neu</span>
+        </button>
 
         <div class="grid grid-cols-3 gap-4 mt-4" v-if="mediaList.length">
-            <div v-for="m in mediaList" :key="m.id" class="border p-2 rounded relative"
-                 :class="m.approved ? 'border-green-600 border-4' : 'border-gray-300'">
-                <div v-if="m.approved"
-                     class="absolute top-1 right-1 bg-green-600 text-white rounded-full px-2 py-1 text-xs">
-                </div>
+            <div
+                v-for="m in mediaList"
+                :key="m.id"
+                class="border p-2 rounded relative"
+                :class="m.approved ? 'border-green-600 border-4' : 'border-gray-300'"
+            >
+                <div
+                    v-if="m.approved"
+                    class="absolute top-1 right-1 bg-green-600 text-white rounded-full px-2 py-1 text-xs"
+                ></div>
+
+
                 <img
                     v-if="m.type === 'image'"
                     :src="m.url"
@@ -32,17 +49,19 @@
                     alt="image"
                 />
 
+
                 <video v-else controls class="w-full h-32 rounded">
                     <source :src="m.url" :type="m.mime"/>
                 </video>
-
             </div>
         </div>
     </div>
 </template>
 
+
 <script>
 import axios from "axios";
+
 
 export default {
     props: {
@@ -50,12 +69,15 @@ export default {
         guestToken: {type: String, default: null}
     },
 
+
     data() {
         return {
             mediaList: [],
-            uploadFiles: []
+            uploadFiles: [],
+            newMediaAvailable: false,
         };
     },
+
 
     computed: {
         mediaEndpoint() {
@@ -63,7 +85,6 @@ export default {
                 ? `/api/guest/${this.albumId}/media`
                 : `/api/albums/${this.albumId}/media`;
         },
-
         uploadEndpoint() {
             return this.guestToken
                 ? `/api/guest/${this.albumId}/upload`
@@ -71,60 +92,113 @@ export default {
         }
     },
 
+
     mounted() {
         this.loadMedia();
     },
 
-    methods: {
-        async loadMedia() {
-            try {
-                const config = {
-                    headers: this.guestToken ? {"Guest-Token": this.guestToken} : {}
-                };
 
+    watch: {
+        albumId: {
+            immediate: true,
+            handler() {
+                this.loadMedia();
+            }
+        }
+    },
+
+
+    methods: {
+        triggerFileDialog() {
+            document.getElementById("hiddenFileInput").click();
+        },
+        async onFilesSelected(event) {
+            this.uploadFiles = Array.from(event.target.files || []);
+            if (!this.uploadFiles.length) {
+                return;
+            }
+            const confirmed = confirm("Upload starten?");
+            if (confirmed) {
+                await this.submitUpload();
+            } else {
+                event.target.value = "";
+                this.uploadFiles = [];
+            }
+        },
+        async loadMedia() {
+            if (!this.albumId)
+                return;
+            try {
+                const config = this.guestToken ? {headers: {"Guest-Token": this.guestToken}} : {};
                 const res = await axios.get(this.mediaEndpoint, config);
+
                 this.mediaList = res.data.media.map(item => ({
                     ...item,
                     approved: item.approved ?? false,
-                    mime: item.mime_type,
-                    url: `/api/media/${item.id}/stream`
+                    mime: item.mime_type ?? "video/mp4",
+                    url: `/api/media/${item.id}/stream`,
+                    type: item.type ?? (item.mime_type?.startsWith("image") ? "image" : "video")
                 }));
-            } catch (error) {
-                console.error("Fehler beim Laden der Medien:", error);
+            } catch (err) {
+                console.error("Fehler beim Laden der Medien:", err);
             }
+            this.newMediaAvailable = true;
+            this.$emit("new-media");
         },
-
-        handleUpload(e) {
-            this.uploadFiles = Array.from(e.target.files || []);
-        },
-
         async submitUpload() {
             if (!this.uploadFiles.length) return;
+
             const fd = new FormData();
-            this.uploadFiles.forEach((file) => {
-                if (file.type.startsWith("image")) {
-                    fd.append("photos[]", file);
-                } else {
-                    fd.append("videos[]", file);
-                }
+            this.uploadFiles.forEach(file => {
+                if (file.type.startsWith("image")) fd.append("photos[]", file);
+                else fd.append("videos[]", file);
             });
+
             try {
-                const config = {
-                    headers: this.guestToken ? {"Guest-Token": this.guestToken} : {}
-                };
-
+                const config = this.guestToken ? {headers: {"Guest-Token": this.guestToken}} : {};
                 await axios.post(this.uploadEndpoint, fd, config);
-                await this.loadMedia();
-                this.$emit('uploaded');
 
-            } catch (error) {
-                console.error("Fehler beim Upload:", error);
+                await this.loadMedia();
+                this.$emit("uploaded");
+                this.uploadFiles = [];
+                document.getElementById("hiddenFileInput").value = ""; // reset input
+            } catch (err) {
+                console.error("Fehler beim Upload:", err);
             }
         },
+        refreshGallery() {
+            this.loadMedia();
+            this.newMediaAvailable = false;
+        },
+        async downloadZip() {
+            const endpoint = this.guestToken
+                ? `/api/albums/${this.albumId}/guest/download`
+                : `/api/albums/${this.albumId}/export/download`;
 
+
+            const headers = this.guestToken ? {"Guest-Token": this.guestToken} : {};
+
+
+            try {
+                const response = await fetch(endpoint, {headers});
+                if (!response.ok) return alert("ZIP ist nicht verfügbar.");
+
+
+                const blob = await response.blob();
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement("a");
+                a.href = url;
+                a.download = `album_${this.albumId}.zip`;
+                a.click();
+            } catch (err) {
+                console.error("Fehler beim Download:", err);
+            }
+        }
     }
 };
 </script>
+
+
 <style scoped>
 .font-lila {
     font-family: "Lila", sans-serif;

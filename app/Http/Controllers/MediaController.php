@@ -46,10 +46,14 @@ class MediaController extends Controller
         $media->approved = true;
         $media->save();
 
-        Redis::sadd("album:{$media->album_id}:approved", $media->id);
+        Redis::sadd("album:{$media->album_id}:approved_media", $media->id);
 
-        return response()->json(['message' => 'Media approved']);
+        return response()->json([
+            'message' => 'Media approved',
+            'media_id' => $media->id
+        ], 200);
     }
+
 
 
     /**

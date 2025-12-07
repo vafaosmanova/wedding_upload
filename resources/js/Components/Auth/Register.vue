@@ -1,57 +1,32 @@
 <template>
-    <h2 class="text-2xl text-purple-600 font-semibold">Registrieren</h2>
-    <div class="font-lila bg-gray-100  flex justify-center items-center">
+    <section class="relative py-12 px-5 min-h-screen bg-violet-700 flex flex-col justify-center items-center bg-gradient-to-b from-purple-50 to-blue-50">
 
-            <form
-                @submit.prevent="register"
-                class="bg-gray-100 text-gray-800 rounded-2xl shadow-xl p-8 w-full max-w-sm flex flex-col gap-4"
-            >
-                <input
-                    v-model="form.name"
-                    placeholder="Name"
-                    class="input-field"
-                />
-                <input
-                    v-model="form.email"
-                    type="email"
-                    placeholder="E-Mail"
-                    class="input-field"
-                />
-                <input
-                    v-model="form.password"
-                    type="password"
-                    placeholder="Passwort"
-                    class="input-field"
-                />
-                <input
-                    v-model="form.password_confirmation"
-                    type="password"
-                    placeholder="Passwort bestätigen"
-                    class="input-field"
-                />
-                <input
-                    v-model="form.title"
-                    placeholder="Album Name"
-                    class="input-field"
-                />
-                <input
-                    v-model="form.pin"
-                    placeholder="PIN"
-                    class="input-field"
-                />
+        <!-- Floating hearts/ornaments -->
+        <div class="absolute inset-0 pointer-events-none">
+            <span class="heart animate-float absolute bg-pink-800 w-2 h-2 rounded-full top-10 left-12"></span>
+            <span class="heart animate-float absolute bg-pink-200 w-2 h-2 rounded-full top-20 right-16"></span>
+            <span class="heart animate-float absolute bg-pink-400 w-1.5 h-1.5 rounded-full bottom-16 left-20"></span>
+            <span class="heart animate-float absolute bg-pink-300 w-1.5 h-1.5 rounded-full bottom-10 right-12"></span>
+        </div>
 
-                <button
-                    type="submit"
-                    class="bg-purple-600 hover:bg-purple-700 text-white font-semibold py-3 rounded-xl transition duration-300 shadow-md w-full"
-                >
-                    Registrieren
-                </button>
+        <!-- Card -->
+        <div class="bg-purple-400 shadow-xl rounded-3xl p-10 max-w-xl w-full relative z-10">
+            <h2 class="text-12xl text-purple-700 mb-6 font-script text-center">Registrieren</h2>
 
-                <p v-if="Object.keys(errors).length" class="text-red-500 text-sm mt-2 text-center">
-                    {{ formatErrors }}
-                </p>
+            <form @submit.prevent="register" class="flex flex-col gap-4">
+                <input v-model="form.name" placeholder="Name" class="input-field" />
+                <input v-model="form.email" type="email" placeholder="E-Mail" class="input-field" />
+                <input v-model="form.password" type="password" placeholder="Passwort" class="input-field" />
+                <input v-model="form.password_confirmation" type="password" placeholder="Passwort bestätigen" class="input-field" />
+                <input v-model="form.title" placeholder="Album Name" class="input-field" />
+                <input v-model="form.pin" placeholder="PIN" class="input-field" />
+
+                <button type="submit" class="btn-primary w-full">Registrieren</button>
+
+                <p v-if="Object.keys(errors).length" class="error-text mt-2 text-center">{{ formatErrors }}</p>
             </form>
-    </div>
+        </div>
+    </section>
 </template>
 
 <script>
@@ -80,24 +55,18 @@ export default {
         async register() {
             this.errors = {};
             try {
-                await axios.get('/sanctum/csrf-cookie', {withCredentials: true});
-
+                await axios.get('/sanctum/csrf-cookie', { withCredentials: true });
                 await axios.post('/api/register', this.form);
-
                 this.$router.push('/dashboard');
-
             } catch (err) {
                 console.error('Axios error:', err);
-                if (err.response) {
-                    if (err.response.status === 422) {
-                        this.errors = err.response.data.errors || {};
-                        this.form.password = "";
-                        this.form.password_confirmation = "";
-                    } else {
-                        alert(`Fehler: ${err.response.status} - ${JSON.stringify(err.response.data)}`);
-                    }
+                if (err.response && err.response.status === 422) {
+                    const e = err.response.data.errors;
+                    this.errors = (e && typeof e === "object" && !Array.isArray(e)) ? e : { general: ["Ungültige Eingabedaten."] };
+                    this.form.password = "";
+                    this.form.password_confirmation = "";
                 } else {
-                    alert('Keine Antwort vom Server erhalten.');
+                    alert("Keine Antwort vom Server erhalten oder anderer Fehler.");
                 }
             }
         }
@@ -108,12 +77,33 @@ export default {
 <style scoped>
 .input-field {
     width: 100%;
-    padding: 10px;
-    margin-bottom: 8px;
+    padding: 14px 16px;
     border: 1px solid #ccc;
-    border-radius: 6px;
+    border-radius: 12px;
+    font-size: 32px;
 }
-.font-lila {
-    font-family: "Lila", sans-serif;
+.btn-primary {
+    background: #9b5de5;
+    color: white;
+    padding: 14px;
+    border-radius: 12px;
+    font-weight: 600;
+    transition: 0.3s;
+}
+.btn-primary:hover {
+    background: #6a11cb;
+}
+.font-script {
+    font-family: 'Dancing Script', cursive;
+    font-size: medium;
+}
+.heart {
+    border-radius: 50%;
+    animation: float 6s ease-in-out infinite;
+}
+@keyframes float {
+    0% { transform: translateY(0) rotate(0deg); }
+    50% { transform: translateY(-12px) rotate(2deg); }
+    100% { transform: translateY(0) rotate(0deg); }
 }
 </style>

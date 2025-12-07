@@ -1,34 +1,67 @@
 <template>
-    <section class="bg-gradient-to-r from-purple-700 to-blue-500 text-white text-center py-24 px-5">
-        <div class="font-lila bg-gray-100 min-h-screen">
-            <div class="max-w-6xl mx-auto p-6">
+    <section class="relative bg-gradient-to-r from-purple-700 to-blue-500 py-16 px-6 min-h-screen flex justify-center items-start">
 
-                <h1 class="text-4xl mb-8 text-center text-purple-600">Meine Alben</h1>
+        <!-- Glass-Container -->
+        <div class="w-full max-w-7xl bg-white/25 backdrop-blur-xl border border-white/30
+                rounded-3xl shadow-2xl p-10 text-gray-900">
 
+            <!-- Titel -->
+            <h1 class="text-6xl font-script text-center text-white drop-shadow-lg mb-12">
+                Meine Hochzeitsalben
+            </h1>
+
+            <!-- Album-Erstellen -->
+            <div class="mb-12">
                 <AlbumForm @albumCreated="addAlbum" />
+            </div>
 
+            <!-- Album-Liste -->
+            <div v-if="albums && albums.length" class="mb-16">
                 <AlbumsList
-                    v-if="albums.length" :albums="albums" @aktualisiert="loadAlbums" @select-album="selectAlbum"
+                    :albums="albums"
+                    @aktualisiert="loadAlbums"
+                    @select-album="selectAlbum"
                 />
+            </div>
 
-                <p v-if="error" class="text-red-500 mt-4">{{ error }}</p>
+            <!-- Fehleranzeige -->
+            <p v-if="error" class="text-red-200 text-center text-xl mt-6">
+                {{ error }}
+            </p>
 
-                <div v-if="selectedAlbumId" class="mt-8">
-                    <h2 class="text-2xl text-purple-600 mb-4">Album: {{ selectedAlbumTitle }}</h2>
+            <!-- Medien-Bereich für ausgewähltes Album -->
+            <div v-if="selectedAlbumId" class="mt-20">
+                <h2 class="text-4xl font-script text-purple-100 text-center mb-10 drop-shadow-md">
+                    Album: {{ selectedAlbumTitle }}
+                </h2>
+
+                <div class="bg-white/30 backdrop-blur-xl border border-white/20 rounded-3xl shadow-xl p-10">
 
                     <MediaGallery
-                        :album-id="selectedAlbumId"  @uploaded="onMediaUploaded"  ref="centralGallery"
+                        :album-id="selectedAlbumId"
+                        @uploaded="onMediaUploaded"
+                        ref="centralGallery"
                     />
 
-                    <div class="mt-6">
-                        <MediaApproval ref="mediaApproval" :album-id="selectedAlbumId" @approved="onMediaApproved" />
+                    <div class="flex flex-col md:flex-row gap-8 mt-12 justify-center">
+                        <MediaApproval
+                            :album-id="selectedAlbumId"
+                            @approved="onMediaApproved"
+                        />
+                        <AlbumZipDownload
+                            :album-id="selectedAlbumId"
+                            :isOwner="true"
+                        />
                     </div>
-                </div>
 
+                </div>
             </div>
+
         </div>
     </section>
 </template>
+
+
 
 <script>
 import axios from "axios";
@@ -36,24 +69,30 @@ import AlbumForm from "./AlbumForm.vue";
 import AlbumsList from "./AlbumsList.vue";
 import MediaGallery from "../Gast/MediaGallery.vue";
 import MediaApproval from "./MediaApproval.vue";
+import AlbumZipDownload from "../AlbumZipDownload.vue";
+
 
 export default {
     name: "Dashboard",
 
+
     components: {
+        AlbumZipDownload,
         AlbumForm,
         AlbumsList,
         MediaGallery,
         MediaApproval
     },
 
+
     data() {
         return {
             albums: [],
             error: "",
-            selectedAlbumId: null,
+            selectedAlbumId: null
         };
     },
+
 
     computed: {
         selectedAlbumTitle() {
@@ -62,77 +101,76 @@ export default {
         }
     },
 
+
     async mounted() {
         await this.loadAlbums();
     },
 
+
     methods: {
         async loadAlbums() {
             try {
-                await axios.get("/sanctum/csrf-cookie", { withCredentials: true });
+                await axios.get("/sanctum/csrf-cookie", {withCredentials: true});
 
-                const res = await axios.get("/api/albums", {
-                    withCredentials: true
-                });
 
+                const res = await axios.get("/api/albums", {withCredentials: true});
                 this.albums = Array.isArray(res.data) ? res.data : [];
 
-                for (const album of this.albums) {
-                    console.log(res);
+
+                await Promise.all(this.albums.map(async album => {
                     try {
                         const qrRes = await axios.get(`/api/albums/${album.id}/qrcode`, {
                             withCredentials: true
                         });
-
                         album.qrCodeSvg = qrRes.data.qr_code ?? "";
                         album.pin = qrRes.data.pin ?? "";
-                        album.exportProgress = 0;
-
                     } catch {
                         album.qrCodeSvg = "";
                         album.pin = "";
-                        album.exportProgress = 0;
                     }
-                }
+                    album.exportProgress = 0;
+                }));
             } catch (err) {
                 console.error("Fehler beim Laden der Alben:", err);
                 this.error = err.response?.data?.message || "Fehler beim Laden der Alben";
             }
         },
 
-        addAlbum(payload) {
-            const { album, qr_code, pin } = payload;
 
+        addAlbum(payload) {
+            const {album, qr_code, pin} = payload;
             const item = {
                 ...album,
                 qrCodeSvg: qr_code ?? "",
                 pin: pin ?? "",
                 exportProgress: 0,
             };
-
             this.albums.unshift(item);
+            this.selectedAlbumId = item.id;
         },
+
 
         selectAlbum(albumId) {
             this.selectedAlbumId = albumId;
-
-            this.$nextTick(() => {
-                this.$refs.centralGallery?.loadMedia?.();
-                this.$refs.mediApproval?.loadPendingMedia?.();
-            });
         },
+
 
         onMediaUploaded() {
-            this.$refs.centralGallery?.loadMedia?.();
+            this.newMediaAvailable = true;
         },
+
 
         onMediaApproved() {
             this.loadAlbums();
         }
+
     }
 };
 </script>
 
+
 <style scoped>
-.font-lila { font-family: "Lila", sans-serif; }
+.font-lila {
+    font-family: "Lila", sans-serif;
+}
 </style>

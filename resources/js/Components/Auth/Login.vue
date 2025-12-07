@@ -1,37 +1,23 @@
 <template>
-    <section class="bg-gradient-to-r from-purple-700 to-blue-500 text-white text-center py-24 px-5">
-        <div class="flex flex-col items-center justify-center mt-12">
-            <form
-                @submit.prevent="login"
-                class="bg-gray-100 text-gray-800 rounded-2xl shadow-xl p-8 w-full max-w-sm flex flex-col gap-4"
-            >
-                <h2 class="text-2xl text-purple-700 mb-4 font-semibold text-center">
-                    Login
-                </h2>
+    <section class="relative py-12 px-5 min-h-screen flex flex-col justify-center items-center bg-gradient-to-b from-purple-200 to-purple-800">
 
-                <input
-                    v-model="form.email"
-                    type="email"
-                    placeholder="E-Mail"
-                    class="input-field"
-                />
-                <input
-                    v-model="form.password"
-                    type="password"
-                    placeholder="Passwort"
-                    class="input-field"
-                />
+        <!-- Floating ornaments -->
+        <div class="absolute inset-0 pointer-events-none">
+            <span class="heart animate-float absolute bg-pink-300 w-2 h-2 rounded-full top-8 left-14"></span>
+            <span class="heart animate-float absolute bg-white w-2 h-2 rounded-full top-24 right-12"></span>
+            <span class="heart animate-float absolute bg-pink-200 w-1.5 h-1.5 rounded-full bottom-20 left-24"></span>
+            <span class="heart animate-float absolute bg-white w-1.5 h-1.5 rounded-full bottom-12 right-16"></span>
+        </div>
 
-                <button
-                    type="submit"
-                    class="bg-purple-600 hover:bg-purple-700 text-white font-semibold py-3 rounded-xl shadow-md transition duration-300"
-                >
-                    Login
-                </button>
+        <div class="card relative z-10">
+            <h2 class="text-3xl text-purple-700 mb-6 font-script text-center">Login</h2>
 
-                <p v-if="error" class="text-red-500 text-sm mt-2 text-center">
-                    {{ error }}
-                </p>
+            <form @submit.prevent="login" class="flex flex-col gap-4">
+                <input v-model="form.email" type="email" placeholder="E-Mail" class="input-field" />
+                <input v-model="form.password" type="password" placeholder="Passwort" class="input-field" />
+
+                <button type="submit" class="btn-primary">Login</button>
+                <p v-if="error" class="error-text">{{ error }}</p>
             </form>
         </div>
     </section>
@@ -43,7 +29,10 @@ import axios from "axios";
 export default {
     data() {
         return {
-            form: {email: "", password: ""},
+            form: {
+                email: "",
+                password: ""
+            },
             error: "",
         };
     },
@@ -68,13 +57,13 @@ export default {
                 console.error("Axios error:", err);
                 if (err.response) {
                     if (err.response.status === 422) {
-                        this.error = Object.values(err.response.data.errors)
-                            .flat()
-                            .join(", ");
-                    } else if (err.response.status === 401) {
-                        this.error = "E-Mail oder Passwort ist falsch.";
-                    } else {
-                        this.error = `Fehler: ${err.response.status}`;
+                        const e = err.response.data.errors;
+
+                        if (e && typeof e === "object") {
+                            this.error = Object.values(e).flat().join(", ");
+                        } else {
+                            this.error = "Ungültige Eingabedaten.";
+                        }
                     }
                 } else {
                     this.error = "Keine Antwort vom Server erhalten.";

@@ -101,4 +101,23 @@ class GuestAlbumController extends Controller
         return response($file, 200)->header('Content-Type', $media->mime_type)
             ->header('Content-Disposition', 'inline');
     }
+    public function downloadZip(Request $request, int $album_id)
+    {
+        $token = $request->header('Guest-Token');
+        $redisAlbumId = Redis::get("guest_token:{$token}");
+
+        if (!$token || !$redisAlbumId || $redisAlbumId != $album_id) {
+            return response()->json(['message' => 'Unauthorized'], 401);
+        }
+
+        $disk = 'hetzner';
+        $zipPath = "albums/{$album_id}/exports/album.zip";
+
+        if (!Storage::disk($disk)->exists($zipPath)) {
+            return response()->json(['message' => 'ZIP not generated'], 404);
+        }
+
+        return Storage::disk($disk)->download($zipPath, "album_{$album_id}.zip");
+    }
+
 }

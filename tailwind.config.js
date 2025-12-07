@@ -1,4 +1,5 @@
-export default {
+/** @type {import('tailwindcss').Config} */
+module.exports = {
     content: [
         "./resources/**/*.blade.php",
         "./resources/**/*.js",
@@ -9,7 +10,12 @@ export default {
         'border-gray-300',
     ],
     theme: {
-        extend: {},
+        extend: {
+            fontFamily: {
+                script: ['Dancing Script', 'cursive'],
+                sans: ['Roboto', 'sans-serif'],
+            },
+        },
     },
     plugins: [],
 };

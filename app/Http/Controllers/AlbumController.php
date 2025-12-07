@@ -8,7 +8,7 @@ use App\Models\Album;
 use App\Models\Pin;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Redis;
-use Illuminate\Support\Facades\Request;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Throwable;
 
@@ -95,34 +95,31 @@ class AlbumController extends Controller
 
         } catch (Throwable $e) {
             Redis::set($redisKey, -1);
-            return response()->json(['message' => 'Fehler beim Starten des Exports'], 500);
+            return response()->json([
+                'message' => 'Fehler beim Starten des Exports',
+                'album_id' => $album_id,
+                'progress_key' => $redisKey] );
         }
     }
-
-
     public function progress(int $album_id)
     {
-        $progress = Redis::get("album_export_progress:{$album_id}");
+        $progress = (int) Redis::get("album_export_progress:{$album_id}");
 
         if (!is_numeric($progress)) {
             $progress = 0;
         }
-
         return response()->json(['progress' => (int)$progress]);
     }
-
-
     public function downloadZip(int $album_id)
     {
         $album = Album::findOrFail($album_id);
-
 
         if ($album->user_id !== auth()->id()) {
             return response()->json(['message' => 'Nicht autorisiert'], 403);
         }
 
         $disk = 'hetzner';
-        $remotePath = "albums/{$album_id}/exports/album_{$album_id}.zip";
+        $remotePath = "albums/{$album_id}/exports/album.zip";
 
         if (!Storage::disk($disk)->exists($remotePath)) {
             return response()->json(['message' => 'ZIP noch nicht verfügbar'], 404);
@@ -130,8 +127,8 @@ class AlbumController extends Controller
 
         return response()->streamDownload(function () use ($disk, $remotePath) {
             $stream = Storage::disk($disk)->readStream($remotePath);
-            if ($stream === false) {
-                abort(500, "Fehler beim Öffnen des ZIP-Files.");
+            if (!$stream) {
+                abort(500, "Fehler beim Öffnen der ZIP-Datei.");
             }
 
             fpassthru($stream);
@@ -140,6 +137,4 @@ class AlbumController extends Controller
             'Content-Type' => 'application/zip',
         ]);
     }
-
-
 }

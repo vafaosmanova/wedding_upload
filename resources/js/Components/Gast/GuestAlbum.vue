@@ -1,91 +1,86 @@
 <template>
-    <section class="bg-gradient-to-r from-purple-700 to-blue-500 text-white text-center py-24 px-5">
-        <div class="font-lila bg-gray-300 min-h-screen">
+    <section class="relative bg-gradient-to-r from-purple-700 to-blue-500 py-20 px-6 min-h-screen flex justify-center items-start">
 
+        <!-- Glas-Container -->
+        <div class="w-full max-w-5xl bg-white/20 backdrop-blur-xl border border-white/30
+                    rounded-3xl shadow-2xl p-10 text-gray-900">
+
+            <!-- PIN Prüfung -->
             <PinVerification
                 v-if="!pinVerified"
                 :album-id="albumId"
                 @verified="onPinVerified"
             />
-            <div v-else class="max-w-6xl mx-auto p-6">
-                <h1 class="text-4xl mb-8 text-center text-purple-600">
-                    Album #{{ albumId }}
+
+            <!-- Album-Inhalt nach PIN -->
+            <div v-else>
+
+                <!-- Titel -->
+                <h1 class="text-6xl font-script text-center text-white drop-shadow-lg mb-12">
+                    Gästebereich – Album {{ albumId }}
                 </h1>
-                <div class="gap-2 mt-2">
+
+                <!-- Medien Galerie -->
+                <div class="bg-white/30 backdrop-blur-xl border border-white/20 rounded-3xl shadow-xl p-10">
+
                     <MediaGallery
+                        ref="gallery"
                         :album-id="albumId"
                         :guest-token="guestToken"
-                        ref="gallery"
-                        @uploaded="refreshGallery"
+                        @uploaded="onGuestUpload"
+                        @new-media="onNewMedia"
                     />
-                </div>
-                <div class="relative bg-slate-100 p-6 rounded-lg shadow mt-10 overflow-hidden">
 
-                    <div class="absolute inset-0">
-                        <img
-                            src="/assets/images/img.png"
-                            alt="Album Background"
-                            class="w-full h-full object-cover opacity-20"
+                    <!-- ZIP Download -->
+                    <div class="mt-10 flex justify-center">
+                        <AlbumZipDownload
+                            :album-id="albumId"
+                            :isOwner="false"
+                            :guestToken="guestToken"
                         />
                     </div>
 
-                    <div class="relative">
-
-                        <div class="flex justify-between items-center mb-2">
-                            <h3 class="text-xl font-semibold">
-                                Album #{{ albumId }}
-                            </h3>
-                        </div>
-
-                    </div>
-
                 </div>
-            </div>
 
+            </div>
         </div>
+
     </section>
 </template>
+
 <script>
 import PinVerification from './PinVerification.vue';
 import MediaGallery from "./MediaGallery.vue";
+import AlbumZipDownload from "../AlbumZipDownload.vue";
 
 export default {
-    props: {
-        albumId: {type: [String, Number], required: true}
-    },
-    components: {
-        MediaGallery,
-        PinVerification,
-    },
+    props: { albumId: { type: [String, Number], required: true } },
+    components: { MediaGallery, PinVerification, AlbumZipDownload },
     data() {
         return {
             pinVerified: false,
-            guestToken: null
+            guestToken: null,
+            newMediaAvailable: false
         };
     },
     methods: {
         onPinVerified(token) {
             this.pinVerified = true;
             this.guestToken = token;
-
             this.$nextTick(() => this.refreshGallery());
         },
-
-        refreshGallery() {
-            const g = this.$refs.gallery;
-            if (g && typeof g.loadMedia === "function") {
-                g.loadMedia();
-            }
-        },
-        onMediaApproved() {
+        onGuestUpload() {
+            // Обновление для гостя, метка «neu» не нужна для собственных загрузок
             this.refreshGallery();
+        },
+        onNewMedia() {
+            // Метка «neu» для других загрузок
+            this.newMediaAvailable = true;
+        },
+        refreshGallery() {
+            this.$refs.gallery?.refreshGallery?.();
+            this.newMediaAvailable = false;
         }
     }
-
 };
 </script>
-<style scoped>
-.font-lila {
-    font-family: "Lila", sans-serif;
-}
-</style>
