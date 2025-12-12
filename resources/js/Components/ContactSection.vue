@@ -7,7 +7,6 @@
             <h2 class="text-2xl font-bold mb-4 text-center">Kontakt</h2>
 
             <form @submit.prevent="submitForm">
-                <!-- Name -->
                 <div class="w-full border rounded-lg px-3 py-2 mb-3 focus:outline-none focus:ring-2 focus:ring-blue-500" >
                     <input
                         v-model="form.name"
@@ -18,7 +17,6 @@
                     <p v-if="errors.name" class="text-red-500 text-sm mt-1">{{ errors.name }}</p>
                 </div>
 
-                <!-- Email -->
                 <div class="mb-3">
                     <input
                         v-model="form.email"
@@ -29,7 +27,6 @@
                     <p v-if="errors.email" class="text-red-500 text-sm mt-1">{{ errors.email }}</p>
                 </div>
 
-                <!-- Subject -->
                 <div class="mb-3">
                     <input
                         v-model="form.subject"

@@ -1,6 +1,6 @@
 <template>
     <div class="font-lila bg-purple-500-100 min-h-screen">
-        <div class="max-w-6xl mx-auto p-6 bg-purple-300">
+        <div class="max-w-6xl mx-auto p-6">
             <h1 class="text-4xl mb-8 text-center text-purple-800">Medienfreigabe</h1>
 
 
@@ -14,11 +14,11 @@
 
             <div v-else class="grid grid-cols-3 gap-4 mb-6">
                 <div v-for="media in pendingMedia" :key="media.id" class="border p-2 rounded relative"
-                     :class="media.approved ? 'border-green-600 border-4' : 'border-gray-300'">
+                     :class="media.approved ? 'border-blue-600 border-4' : 'border-gray-300'">
 
 
                     <div v-if="media.approved"
-                         class="absolute top-1 right-1 bg-green-600 text-white rounded-full px-2 py-1 text-xs"></div>
+                         class="absolute top-1 right-1 bg-blue-600 text-white rounded-full px-2 py-1 text-xs"></div>
 
 
                     <img v-if="media.type === 'image'"
@@ -28,8 +28,8 @@
                     </video>
 
 
-                    <div class="flex justify-between mt-2">
-                        <button class="bg-red-600 text-white px-2 py-1 rounded text-sm"
+                    <div class="flex justify-between mt-2 ">
+                        <button class="bg-purple-600 text-white px-2 py-1 rounded text-sm"
                                 @click="deleteMedia(media)">
                             X
                         </button>
@@ -43,7 +43,10 @@
 
 
             <div class="mb-4 text-center">
-                <button class="bg-purple-600 text-white px-6 py-2 rounded hover:bg-purple-700 disabled:opacity-50"
+                <button class="px-5 py-2 rounded-lg
+                bg-gradient-to-r from-purple-600 to-pink-500 text-white
+                hover:from-pink-500 hover:to-purple-600 hover:scale-105
+                focus:outline-none focus:ring-2 focus:ring-purple-400 focus:ring-offset-2"
                         @click="exportAlbum"
                         :disabled="exportProgress > 0 && exportProgress < 100">
                     ZIP Export starten

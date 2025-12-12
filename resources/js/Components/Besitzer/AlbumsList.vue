@@ -7,16 +7,16 @@
 
             <div class="relative">
                 <div class="flex justify-between items-center mb-2">
-                    <h3 class="text-xl font-semibold">{{ album.title || album.name }}</h3>
+                    <h3 class="text-4xl font-script text-center text-purple-600 drop-shadow-lg">{{ album.title }}</h3>
                     <span class="text-gray-500 font-mono">PIN: {{ album.pin }}</span>
                 </div>
 
                 <div v-html="album.qrCodeSvg" class="bg-white p-2 inline-block rounded mb-2"></div>
 
                 <div class="flex gap-2 mt-2">
-                    <button class="bg-yellow-500 text-white px-4 py-2 rounded hover:bg-yellow-600" @click="bearbeiteAlbum(album.id)">Bearbeiten</button>
-                    <button class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700" @click="loescheAlbum(album.id)">Löschen</button>
-                    <button class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700" @click="$emit('select-album', album.id)">Medien anzeigen</button>
+                    <button class="bg-purple-600 hover:scale-105 text-white px-4 py-2 rounded hover:bg-purple-800" @click="bearbeiteAlbum(album.id)">Bearbeiten</button>
+                    <button class="bg-pink-500 hover:scale-105 text-white px-4 py-2 rounded hover:bg-pink-700" @click="loescheAlbum(album.id)">Löschen</button>
+                    <button class="bg-blue-500 hover:scale-105 text-white px-4 py-2 rounded hover:bg-blue-700" @click="$emit('select-album', album.id)">Medien anzeigen</button>
                 </div>
             </div>
         </div>
@@ -59,3 +59,6 @@ export default {
     }
 };
 </script>
+<style scoped>
+
+</style>

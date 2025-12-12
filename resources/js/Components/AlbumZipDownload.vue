@@ -1,7 +1,10 @@
 <template>
     <div class="text-center mt-6">
         <button
-            class="bg-green-600 text-white px-6 py-2 rounded hover:bg-green-700 disabled:opacity-50"
+            class="px-5 py-2 rounded-lg
+           bg-gradient-to-r from-blue-700 to-blue-500 text-white
+           hover:from-blue-500 hover:to-blue-700 hover:scale-105
+           focus:outline-none focus:ring-2 focus:ring-blue-300 focus:ring-offset-2"
             @click="startDownload"
             :disabled="loading"
         >

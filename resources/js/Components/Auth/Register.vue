@@ -1,7 +1,6 @@
 <template>
     <section class="relative py-12 px-5 min-h-screen bg-violet-700 flex flex-col justify-center items-center bg-gradient-to-b from-purple-50 to-blue-50">
 
-        <!-- Floating hearts/ornaments -->
         <div class="absolute inset-0 pointer-events-none">
             <span class="heart animate-float absolute bg-pink-800 w-2 h-2 rounded-full top-10 left-12"></span>
             <span class="heart animate-float absolute bg-pink-200 w-2 h-2 rounded-full top-20 right-16"></span>
@@ -9,7 +8,6 @@
             <span class="heart animate-float absolute bg-pink-300 w-1.5 h-1.5 rounded-full bottom-10 right-12"></span>
         </div>
 
-        <!-- Card -->
         <div class="bg-purple-400 shadow-xl rounded-3xl p-10 max-w-xl w-full relative z-10">
             <h2 class="text-12xl text-purple-700 mb-6 font-script text-center">Registrieren</h2>
 
@@ -52,6 +50,7 @@ export default {
         }
     },
     methods: {
+/*
         async register() {
             this.errors = {};
             try {
@@ -69,7 +68,8 @@ export default {
                     alert("Keine Antwort vom Server erhalten oder anderer Fehler.");
                 }
             }
-        }
+
+        }*/
     }
 };
 </script>

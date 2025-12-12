@@ -45,7 +45,7 @@ export default {
                 const res = await axios.post("/api/login", {
                     email: this.form.email,
                     password: this.form.password,
-                });
+                }, {withCredentials: true});
 
                 if (res.data.success) {
                     console.log("Login success für: " + res.data.success);
@@ -73,16 +73,3 @@ export default {
     },
 };
 </script>
-
-<style scoped>
-.input-field {
-    @apply w-full
-    px-4 py-3 border
-    border-gray-300
-    rounded-xl
-    focus:ring-2
-    focus:ring-purple-500
-    focus:outline-none
-    transition duration-200;
-}
-</style>

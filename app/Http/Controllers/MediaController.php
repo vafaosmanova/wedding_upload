@@ -55,7 +55,6 @@ class MediaController extends Controller
     }
 
 
-
     /**
      * Löschen
      */

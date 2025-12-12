@@ -7,7 +7,10 @@
             <input v-model.trim="pin" type="text" placeholder="PIN" class="border p-2 w-64 text-gray-800 bg-white rounded" />
 
             <button
-                class="bg-purple-600 text-white px-4 py-2 rounded hover:bg-purple-700 disabled:opacity-50"
+                class="px-5 py-2 rounded-lg
+           bg-gradient-to-r from-purple-600 to-pink-500 text-white
+           hover:from-pink-500 hover:to-purple-600 hover:scale-105
+           focus:outline-none focus:ring-2 focus:ring-purple-400 focus:ring-offset-2"
                 :disabled="loading || !title"
                 @click="createAlbum"
             >
@@ -47,7 +50,7 @@ export default {
 
                 let albumObj = payload.album ?? payload;
                 let qr_code = payload.qr_code ?? null;
-                let pin = payload.pin ?? this.pin;
+                let pin = payload.pin ?? this.pin ?? null;
 
                 this.message = "Album erfolgreich erstellt!";
 

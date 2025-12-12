@@ -43,6 +43,7 @@ class Album extends Model
     {
         return $this->belongsTo(User::class);
     }
+    //Beziehung: Ein Album besitzt viele Medien (1:n)
     public function media(): HasMany
     {
         return $this->hasMany(Media::class);

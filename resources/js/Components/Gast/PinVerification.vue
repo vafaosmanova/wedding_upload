@@ -1,7 +1,6 @@
 <template>
     <section class="relative py-12 px-5 min-h-screen flex flex-col justify-center items-center bg-gradient-to-b from-purple-200 to-purple-800">
 
-        <!-- Floating ornaments -->
         <div class="absolute inset-0 pointer-events-none">
             <span class="heart animate-float absolute bg-pink-300 w-2 h-2 rounded-full top-12 left-16"></span>
             <span class="heart animate-float absolute bg-white w-2 h-2 rounded-full top-28 right-14"></span>
@@ -12,11 +11,13 @@
         <div class="card relative z-10 text-center">
             <h2 class="text-3xl mb-6 text-purple-700 font-script">PIN eingeben</h2>
 
-            <input v-model="pin" type="text" placeholder="PIN" class="input-field mb-4" />
+            <form @submit.prevent="verifyPin">
+                <input v-model="pin" type="text" placeholder="PIN eingeben" class="input-field mb-4" />
+                <button type="submit" class="btn-primary" :disabled="loading || !pin">
+                    {{ loading ? 'Überprüfen...' : 'Bestätigen' }}
+                </button>
+            </form>
 
-            <button class="btn-primary" @click="verifyPin" :disabled="loading || !pin">
-                {{ loading ? 'Überprüfen...' : 'Bestätigen' }}
-            </button>
 
             <p v-if="error" class="error-text">{{ error }}</p>
         </div>
@@ -44,8 +45,9 @@
 
                     try {
                         const res = await axios.post(`/api/guest/${this.albumId}/verify-pin`, {
-                            pin: this.pin.toString()
-                      });
+                            pin: this.pin
+                        });
+
                         if (res.data.success && res.data.token) {
                             this.$emit('verified', res.data.token);
                         } else {
@@ -54,7 +56,7 @@
 
                     } catch (err) {
                         this.error = 'Fehler bei der PIN-Überprüfung';
-                  console.error(err);
+                        console.error(err);
                     }
                 }
             }

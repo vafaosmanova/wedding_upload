@@ -1,21 +1,17 @@
 <template>
     <section class="relative bg-gradient-to-r from-purple-700 to-blue-500 py-16 px-6 min-h-screen flex justify-center items-start">
 
-        <!-- Glass-Container -->
         <div class="w-full max-w-7xl bg-white/25 backdrop-blur-xl border border-white/30
                 rounded-3xl shadow-2xl p-10 text-gray-900">
 
-            <!-- Titel -->
             <h1 class="text-6xl font-script text-center text-white drop-shadow-lg mb-12">
                 Meine Hochzeitsalben
             </h1>
 
-            <!-- Album-Erstellen -->
             <div class="mb-12">
                 <AlbumForm @albumCreated="addAlbum" />
             </div>
 
-            <!-- Album-Liste -->
             <div v-if="albums && albums.length" class="mb-16">
                 <AlbumsList
                     :albums="albums"
@@ -24,12 +20,10 @@
                 />
             </div>
 
-            <!-- Fehleranzeige -->
             <p v-if="error" class="text-red-200 text-center text-xl mt-6">
                 {{ error }}
             </p>
 
-            <!-- Medien-Bereich für ausgewähltes Album -->
             <div v-if="selectedAlbumId" class="mt-20">
                 <h2 class="text-4xl font-script text-purple-100 text-center mb-10 drop-shadow-md">
                     Album: {{ selectedAlbumTitle }}
@@ -42,16 +36,16 @@
                         @uploaded="onMediaUploaded"
                         ref="centralGallery"
                     />
-
+                    <AlbumZipDownload
+                        :album-id="selectedAlbumId"
+                        :isOwner="true"
+                    />
                     <div class="flex flex-col md:flex-row gap-8 mt-12 justify-center">
                         <MediaApproval
                             :album-id="selectedAlbumId"
                             @approved="onMediaApproved"
                         />
-                        <AlbumZipDownload
-                            :album-id="selectedAlbumId"
-                            :isOwner="true"
-                        />
+
                     </div>
 
                 </div>
@@ -170,7 +164,4 @@ export default {
 
 
 <style scoped>
-.font-lila {
-    font-family: "Lila", sans-serif;
-}
 </style>

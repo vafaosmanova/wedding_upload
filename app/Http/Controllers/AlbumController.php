@@ -54,10 +54,14 @@ class AlbumController extends Controller
     {
         $album = Album::findOrFail($album_id);
         if ($album->user_id !== auth()->id()) {
-            $request->validate(['title' => 'nullable|string|max:255', 'pin' => 'nullable|string|min:4|max:10']);
-            $album->update($request->only(['title', 'pin']));
+            return response()->json(['message' => 'Album aktualisiert', 'album' => $album]);
         }
-        return response()->json(['message' => 'Album aktualisiert', 'album' => $album]);
+        $request->validate(['title' => 'nullable|string|max:255', 'pin' => 'nullable|string|min:4|max:10']);
+        $album->update($request->only(['title', 'pin']));
+        return response()->json([
+            'message' => 'Album aktualisiert',
+            'album' => $album
+        ]);
     }
 
     public function destroy($album_id)

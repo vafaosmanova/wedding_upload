@@ -74,5 +74,3 @@ Queue starten                   php artisan queue:work
 > ExportAlbumJob - ZIP-Erstellung im Hintergrund
 
 
-
-
