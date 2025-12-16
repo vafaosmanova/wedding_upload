@@ -1,7 +1,6 @@
 <template>
     <section class="relative py-12 px-5 min-h-screen flex flex-col justify-center items-center bg-gradient-to-b from-purple-200 to-purple-800">
 
-        <!-- Floating ornaments -->
         <div class="absolute inset-0 pointer-events-none">
             <span class="heart animate-float absolute bg-pink-300 w-2 h-2 rounded-full top-8 left-14"></span>
             <span class="heart animate-float absolute bg-white w-2 h-2 rounded-full top-24 right-12"></span>
@@ -48,10 +47,9 @@ export default {
                 }, {withCredentials: true});
 
                 if (res.data.success) {
-                    console.log("Login success für: " + res.data.success);
                     this.$router.push("/dashboard");
                 } else {
-                    this.error = res.data.message || "Unbekannter Fehler.";
+                    this.error = res.data.message;
                 }
             } catch (err) {
                 console.error("Axios error:", err);

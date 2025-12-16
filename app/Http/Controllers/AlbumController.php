@@ -84,12 +84,7 @@ class AlbumController extends Controller
         if ($album->user_id !== auth()->id()) {
             return response()->json(['message' => 'Nicht autorisiert'], 403);
         }
-
-        $redisKey = "album_export_progress:{$album_id}";
-
         try {
-            Redis::set($redisKey, 0);
-
             ExportAlbumJob::dispatch($album_id)->onQueue('exports');
 
             return response()->json([
@@ -98,21 +93,34 @@ class AlbumController extends Controller
             ]);
 
         } catch (Throwable $e) {
-            Redis::set($redisKey, -1);
+            Redis::setex("album_export_progress:{$album_id}", 3600, -1);
             return response()->json([
                 'message' => 'Fehler beim Starten des Exports',
-                'album_id' => $album_id,
-                'progress_key' => $redisKey] );
+                'album_id' => $album_id
+                ], 500);
         }
     }
     public function progress(int $album_id)
     {
-        $progress = (int) Redis::get("album_export_progress:{$album_id}");
+        $value = Redis::get("album_export_progress:{$album_id}");
 
-        if (!is_numeric($progress)) {
-            $progress = 0;
+        if ($value === null) {
+            return response()->json([
+                'progress' => 0,
+                'status' => 'not_started',
+            ]);
         }
-        return response()->json(['progress' => (int)$progress]);
+
+        $progress = (int) $value;
+
+        return response()->json([
+            'progress' => $progress,
+            'status' => match (true) {
+                $progress < 0   => 'failed',
+                $progress >= 100 => 'done',
+                default         => 'processing',
+            },
+        ]);
     }
     public function downloadZip(int $album_id)
     {

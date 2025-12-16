@@ -70,7 +70,6 @@ class GuestAlbumController extends Controller
         }
 
         $media = Media::where('album_id', $album_id)
-            ->where('approved', false)
             ->get();
 
         $type = 'image';

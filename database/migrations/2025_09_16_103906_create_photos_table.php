@@ -11,8 +11,8 @@ return new class extends Migration
         Schema::create('photos', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('album_id');
-            $table->string('filename'); // Ursprünglicher Dateiname
-            $table->string('path'); // Pfad oder Storage-Link
+            $table->string('filename');
+            $table->string('path');
             $table->boolean('approved')->default(false);
             $table->timestamps();
 

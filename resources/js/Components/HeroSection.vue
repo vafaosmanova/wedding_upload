@@ -20,7 +20,6 @@
 
         </div>
 
-
         <div class="bg-purple-200 shadow-xl rounded-3xl p-10 max-w-md w-full z-10 relative">
             <h2 class="text-5xl text-purple-700 mb-6 font-script text-center">Registrieren</h2>
 
@@ -58,15 +57,14 @@
 </template>
 
 <script>
-import Register from "./Auth/Register.vue";
+
 import FeaturesSection from "./FeaturesSection.vue";
 import PricingSection from "./PricingSection.vue";
 import ContactSection from "./ContactSection.vue";
-import axios from 'axios';
 import AlbumZipDownload from "./AlbumZipDownload.vue";
-
+import axios from 'axios';
 export default {
-    components: {AlbumZipDownload, Register, FeaturesSection, PricingSection, ContactSection},
+    components: {AlbumZipDownload, FeaturesSection, PricingSection, ContactSection},
     data() {
         return {
             form: {
@@ -96,7 +94,11 @@ export default {
                 console.error('Axios error:', err);
                 if (err.response && err.response.status === 422) {
                     const e = err.response.data.errors;
-                    this.errors = (e && typeof e === "object" && !Array.isArray(e)) ? e : {general: ["Ungültige Eingabedaten."]};
+                    if (e && typeof e === "object") {
+                        this.error = Object.values(e).flat().join(", ");
+                    } else {
+                        this.error = "Ungültige Eingabedaten.";
+                    }
                     this.form.password = "";
                     this.form.password_confirmation = "";
                 } else {

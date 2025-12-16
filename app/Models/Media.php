@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @method static where(string $string, $album_id)
  * @method static find($id)
  * @method static findOrFail(string $media_id)
+ * @method static whereIn(string $string, array $mediaIds)
  */
 class Media extends Model
 {

@@ -1,26 +1,16 @@
 <template>
     <section class="relative bg-gradient-to-r from-purple-700 to-blue-500 py-20 px-6 min-h-screen flex justify-center items-start">
-
-        <!-- Glas-Container -->
         <div class="w-full max-w-5xl bg-white/20 backdrop-blur-xl border border-white/30
                     rounded-3xl shadow-2xl p-10 text-gray-900">
-
-            <!-- PIN Prüfung -->
             <PinVerification
                 v-if="!pinVerified"
                 :album-id="albumId"
                 @verified="onPinVerified"
             />
-
-            <!-- Album-Inhalt nach PIN -->
             <div v-else>
-
-                <!-- Titel -->
                 <h1 class="text-6xl font-script text-center text-white drop-shadow-lg mb-12">
                     Gästebereich – Album {{ albumId }}
                 </h1>
-
-                <!-- Medien Galerie -->
                 <div class="bg-white/30 backdrop-blur-xl border border-white/20 rounded-3xl shadow-xl p-10">
 
                     <MediaGallery
@@ -31,7 +21,6 @@
                         @new-media="onNewMedia"
                     />
 
-                    <!-- ZIP Download -->
                     <div class="mt-10 flex justify-center">
                         <AlbumZipDownload
                             :album-id="albumId"
@@ -70,11 +59,9 @@ export default {
             this.$nextTick(() => this.refreshGallery());
         },
         onGuestUpload() {
-            // Обновление для гостя, метка «neu» не нужна для собственных загрузок
             this.refreshGallery();
         },
         onNewMedia() {
-            // Метка «neu» для других загрузок
             this.newMediaAvailable = true;
         },
         refreshGallery() {

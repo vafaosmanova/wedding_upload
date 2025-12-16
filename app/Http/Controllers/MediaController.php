@@ -36,9 +36,9 @@ class MediaController extends Controller
      * Genehmigen
      */
 
-    public function approve($id)
+    public function approve($media_id)
     {
-        $media = Media::find($id);
+        $media = Media::find($media_id);
         if (!$media) {
             return response()->json(['message' => 'Media not found'], 404);
         }
@@ -58,9 +58,9 @@ class MediaController extends Controller
     /**
      * Löschen
      */
-    public function destroy($id)
+    public function destroy($media_id)
     {
-        $media = Media::find($id);
+        $media = Media::find($media_id);
         if (!$media) {
             return response()->json(['message' => 'Media not found'], 404);
         }

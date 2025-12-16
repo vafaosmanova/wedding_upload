@@ -46,11 +46,10 @@ export default {
             try {
                 await axios.get("/sanctum/csrf-cookie", { withCredentials: true });
                 const res = await axios.post("/api/albums", { title: this.title, pin: this.pin }, { withCredentials: true });
-                const payload = res.data;
 
-                let albumObj = payload.album ?? payload;
-                let qr_code = payload.qr_code ?? null;
-                let pin = payload.pin ?? this.pin ?? null;
+                let albumObj = res.data.album ?? res.data;
+                let qr_code = res.data.qr_code ?? null;
+                let pin = res.data.pin ?? this.pin ?? null;
 
                 this.message = "Album erfolgreich erstellt!";
 

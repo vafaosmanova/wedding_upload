@@ -20,7 +20,7 @@ Route::get('/debug', function (Request $request) {
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login'])->name('api.login');
 Route::middleware('auth:sanctum')->group(function () {
-    //GRUD
+    //CRUD
     Route::get('/albums', [AlbumController::class, 'index']);
     Route::post('/albums', [AlbumController::class, 'store']);
     Route::put('/albums/{album_id}', [AlbumController::class, 'update']);

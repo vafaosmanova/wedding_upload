@@ -1,8 +1,6 @@
 <template>
     <div class="p-4 font-lila">
         <h3 class="text-2xl text-purple-600 mb-4">Mediengalerie</h3>
-
-
         <input
             type="file"
             id="hiddenFileInput"
@@ -11,8 +9,6 @@
             @change="onFilesSelected"
             class="hidden"
         />
-
-
         <button
             @click="triggerFileDialog"
             class="px-5 py-2 rounded-lg
@@ -22,7 +18,6 @@
         >
             Hochladen
         </button>
-
         <button
             v-if="newMediaAvailable"
             @click="refreshGallery"
@@ -34,8 +29,6 @@
             Liste aktualisieren
             <span v-if="newMediaAvailable" class="ml-2 text-xs bg-white text-blue-500 px-1 rounded-full">neu</span>
         </button>
-
-
         <div class="grid grid-cols-3 gap-4 mt-4" v-if="mediaList.length">
             <div
                 v-for="m in mediaList"
@@ -47,8 +40,6 @@
                     v-if="m.approved"
                     class="absolute top-1 right-1 bg-green-600 text-white rounded-full px-2 py-1 text-xs"
                 ></div>
-
-
                 <img
                     v-if="m.type === 'image'"
                     :src="m.url"
@@ -56,8 +47,6 @@
                     alt="image"
                     @click="openModal(m.url)"
                 />
-
-
                 <video v-else controls class="w-full h-32 rounded">
                     <source :src="m.url" :type="m.mime"/>
                 </video>
@@ -74,19 +63,13 @@
         </div>
     </div>
 </template>
-
-
 <script>
 import axios from "axios";
-
-
 export default {
     props: {
         albumId: {type: [String, Number], required: true},
         guestToken: {type: String, default: null}
     },
-
-
     data() {
         return {
             mediaList: [],
@@ -95,8 +78,6 @@ export default {
             modalUrl: null,
         };
     },
-
-
     computed: {
         mediaEndpoint() {
             return this.guestToken
@@ -109,13 +90,9 @@ export default {
                 : `/api/albums/${this.albumId}/upload`;
         }
     },
-
-
     mounted() {
         this.loadMedia();
     },
-
-
     watch: {
         albumId: {
             immediate: true,
@@ -124,8 +101,6 @@ export default {
             }
         }
     },
-
-
     methods: {
         triggerFileDialog() {
             document.getElementById("hiddenFileInput").click();
@@ -221,8 +196,6 @@ export default {
     }
 };
 </script>
-
-
 <style scoped>
 .font-lila {
     font-family: "Lila", sans-serif;
