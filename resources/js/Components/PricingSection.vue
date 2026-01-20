@@ -2,14 +2,11 @@
     <section class="bg-gradient-to-r from-purple-700 to-blue-500 text-white text-center py-24 px-5">
         <div class="max-w-6xl mx-auto px-5">
             <h2 class="text-4xl font-bold mb-4">Preise</h2>
-            <p class="text-gray-600 mb-12">
-                Wähle das passende Paket für deine Veranstaltung – klar, einfach und transparent.
-            </p>
 
-            <div class="flex flex-wrap justify-center gap-10">
+            <div class="flex flex-wrap justify-center gap-10 p-6">
 
                 <div
-                    class="bg-gray-100 rounded-2xl w-80 p-8 transition-transform transform hover:scale-105 hover:shadow-lg"
+                    class="card bg-gray-100 rounded-2xl w-80 p-8 transition-transform transform hover:scale-105 hover:shadow-lg"
                 >
                     <h3 class="text-2xl font-semibold mb-2">Basic</h3>
                     <p class="text-gray-600 mb-4">Ideal für kleine Feiern</p>
@@ -30,7 +27,7 @@
                 </div>
 
                 <div
-                    class="bg-purple-100 rounded-2xl w-80 p-8 transition-transform transform hover:scale-105 hover:shadow-lg border-2 border-purple-300"
+                    class="card bg-purple-100 rounded-2xl w-80 p-8 transition-transform transform hover:scale-105 hover:shadow-lg border-2 border-purple-300"
                 >
                     <h3 class="text-2xl font-semibold mb-2">Premium</h3>
                     <p class="text-gray-600 mb-4">Für große Hochzeiten</p>

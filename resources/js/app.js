@@ -6,10 +6,11 @@ import axios from 'axios';
 import '@fortawesome/fontawesome-free/js/fontawesome';
 import '@fortawesome/fontawesome-free/js/solid';
 
-axios.defaults.withCredentials = true;
-axios.defaults.baseURL = 'https://wedding-upload.test';
-
+const api = axios.create({
+    baseURL: 'https://wedding-upload.test',
+    withCredentials: true
+});
 const app = createApp(App);
-app.config.globalProperties.$axios = axios;
+app.config.globalProperties.$axios = api;
 app.use(router);
 app.mount('#app');

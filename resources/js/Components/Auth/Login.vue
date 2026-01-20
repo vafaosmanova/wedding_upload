@@ -1,5 +1,5 @@
 <template>
-    <section class="relative py-12 px-5 min-h-screen flex flex-col justify-center items-center bg-gradient-to-b from-purple-200 to-purple-800">
+    <section class="relative py-12 px-5 min-h-screen flex flex-col justify-center items-center">
 
         <div class="absolute inset-0 pointer-events-none">
             <span class="heart animate-float absolute bg-pink-300 w-2 h-2 rounded-full top-8 left-14"></span>
@@ -7,10 +7,8 @@
             <span class="heart animate-float absolute bg-pink-200 w-1.5 h-1.5 rounded-full bottom-20 left-24"></span>
             <span class="heart animate-float absolute bg-white w-1.5 h-1.5 rounded-full bottom-12 right-16"></span>
         </div>
-
         <div class="card relative z-10">
             <h2 class="text-3xl text-purple-700 mb-6 font-script text-center">Login</h2>
-
             <form @submit.prevent="login" class="flex flex-col gap-4">
                 <input v-model="form.email" type="email" placeholder="E-Mail" class="input-field" />
                 <input v-model="form.password" type="password" placeholder="Passwort" class="input-field" />
@@ -21,10 +19,7 @@
         </div>
     </section>
 </template>
-
 <script>
-import axios from "axios";
-
 export default {
     data() {
         return {
@@ -39,9 +34,7 @@ export default {
         async login() {
             this.error = "";
             try {
-                await axios.get("/sanctum/csrf-cookie", {withCredentials: true});
-
-                const res = await axios.post("/api/login", {
+                const res = await this.$axios.post("/api/login", {
                     email: this.form.email,
                     password: this.form.password,
                 }, {withCredentials: true});

@@ -1,59 +1,56 @@
 <template>
-    <section class="relative bg-gradient-to-r from-purple-700 to-blue-500 py-16 px-6 min-h-screen flex justify-center items-start">
-        <div class="w-full max-w-7xl bg-white/25 backdrop-blur-xl border border-white/30
-                rounded-3xl shadow-2xl p-10 text-gray-900">
-            <h1 class="text-6xl font-script text-center text-white drop-shadow-lg mb-12">
+    <section class="relative py-12 px-5 min-h-screen flex flex-col justify-center items-center">
+        <div>
+            <h1 class="text-6xl font-script text-center text-white drop-shadow-lg mb-2">
                 Meine Hochzeitsalben
             </h1>
 
             <div class="mb-12">
-                <AlbumForm @albumCreated="addAlbum" />
+                <AlbumForm @albumCreated="addAlbum"/>
             </div>
 
-            <div v-if="albums && albums.length" class="mb-16">
+            <div v-if="albums && albums.length" class="mb-2">
                 <AlbumsList
                     :albums="albums"
                     @aktualisiert="loadAlbums"
                     @select-album="selectAlbum"
                 />
             </div>
-            <p v-if="error" class="text-red-200 text-center text-xl mt-6">
+            <p v-if="error" class="text-red-200 text-center text-xl mt-2">
                 {{ error }}
             </p>
-            <div v-if="selectedAlbumId" class="mt-20">
-                <h2 class="text-4xl font-script text-purple-100 text-center mb-10 drop-shadow-md">
+            <div v-if="selectedAlbumId">
+                <h2 class="text-4xl font-script text-purple-100 text-center mb-2 drop-shadow-md">
                     Album: {{ selectedAlbumTitle }}
                 </h2>
-                <div class="bg-white/30 backdrop-blur-xl border border-white/20 rounded-3xl shadow-xl p-10">
-
+                <div>
                     <MediaGallery
                         :album-id="selectedAlbumId"
                         @uploaded="onMediaUploaded"
                         ref="centralGallery"
                     />
-                    <AlbumZipDownload
-                        :album-id="selectedAlbumId"
-                        :isOwner="true"
-                    />
-                    <div class="flex flex-col md:flex-row gap-8 mt-12 justify-center">
+                    <div class="md:flex-row gap-8 mt-2 justify-center">
                         <MediaApproval
                             :album-id="selectedAlbumId"
                             @approved="onMediaApproved"
                         />
+                        <AlbumZipDownload
+                            :album-id="selectedAlbumId"
+                            :isOwner="true"
+                        />
                     </div>
                 </div>
             </div>
-
         </div>
     </section>
 </template>
 <script>
-import axios from "axios";
 import AlbumForm from "./AlbumForm.vue";
 import AlbumsList from "./AlbumsList.vue";
 import MediaGallery from "../Gast/MediaGallery.vue";
 import MediaApproval from "./MediaApproval.vue";
 import AlbumZipDownload from "../AlbumZipDownload.vue";
+
 export default {
     name: "Dashboard",
     components: {
@@ -82,16 +79,13 @@ export default {
     methods: {
         async loadAlbums() {
             try {
-                await axios.get("/sanctum/csrf-cookie", {withCredentials: true});
-
-
-                const res = await axios.get("/api/albums", {withCredentials: true});
+                const res = await this.$axios.get("/api/albums", {withCredentials: true});
                 this.albums = Array.isArray(res.data) ? res.data : [];
 
 
                 await Promise.all(this.albums.map(async album => {
                     try {
-                        const qrRes = await axios.get(`/api/albums/${album.id}/qrcode`, {
+                        const qrRes = await this.$axios.get(`/api/albums/${album.id}/qrcode`, {
                             withCredentials: true
                         });
                         album.qrCodeSvg = qrRes.data.qr_code ?? "";

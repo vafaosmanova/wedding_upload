@@ -62,7 +62,6 @@ import FeaturesSection from "./FeaturesSection.vue";
 import PricingSection from "./PricingSection.vue";
 import ContactSection from "./ContactSection.vue";
 import AlbumZipDownload from "./AlbumZipDownload.vue";
-import axios from 'axios';
 export default {
     components: {AlbumZipDownload, FeaturesSection, PricingSection, ContactSection},
     data() {
@@ -87,8 +86,7 @@ export default {
         async register() {
             this.errors = {};
             try {
-                await axios.get('/sanctum/csrf-cookie', {withCredentials: true});
-                await axios.post('/api/register', this.form);
+                await this.$axios.post('/api/register', this.form);
                 this.$router.push('/dashboard');
             } catch (err) {
                 console.error('Axios error:', err);

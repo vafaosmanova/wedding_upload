@@ -1,5 +1,5 @@
 <template>
-    <section class="relative py-12 px-5 min-h-screen flex flex-col justify-center items-center bg-gradient-to-b from-purple-200 to-purple-800">
+    <section class="relative py-12 px-5 min-h-screen flex flex-col justify-center items-center">
 
         <div class="absolute inset-0 pointer-events-none">
             <span class="heart animate-float absolute bg-pink-300 w-2 h-2 rounded-full top-12 left-16"></span>
@@ -8,25 +8,20 @@
             <span class="heart animate-float absolute bg-white w-1.5 h-1.5 rounded-full bottom-16 right-18"></span>
         </div>
 
-        <div class="card relative z-10 text-center">
+        <div class="card relative z-10">
             <h2 class="text-3xl mb-6 text-purple-700 font-script">PIN eingeben</h2>
-
             <form @submit.prevent="verifyPin">
                 <input v-model="pin" type="text" placeholder="PIN eingeben" class="input-field mb-4" />
                 <button type="submit" class="btn-primary" :disabled="loading || !pin">
                     {{ loading ? 'Überprüfen...' : 'Bestätigen' }}
                 </button>
             </form>
-
-
             <p v-if="error" class="error-text">{{ error }}</p>
         </div>
     </section>
 </template>
 
 <script>
-        import axios from 'axios';
-
         export default {
             props: {
                 albumId: { type: [String, Number], required: true }
@@ -44,7 +39,7 @@
                     this.error = '';
 
                     try {
-                        const res = await axios.post(`/api/guest/${this.albumId}/verify-pin`, {
+                        const res = await this.$axios.post(`/api/guest/${this.albumId}/verify-pin`, {
                             pin: this.pin
                         });
 

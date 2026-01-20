@@ -25,7 +25,6 @@
 </template>
 
 <script>
-import axios from "axios";
 
 export default {
     name: "AlbumForm",
@@ -44,8 +43,7 @@ export default {
 
             this.loading = true;
             try {
-                await axios.get("/sanctum/csrf-cookie", { withCredentials: true });
-                const res = await axios.post("/api/albums", { title: this.title, pin: this.pin }, { withCredentials: true });
+                const res = await this.$axios.post("/api/albums", { title: this.title, pin: this.pin }, { withCredentials: true });
 
                 let albumObj = res.data.album ?? res.data;
                 let qr_code = res.data.qr_code ?? null;

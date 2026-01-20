@@ -3,8 +3,7 @@
         <button
             class="px-5 py-2 rounded-lg
                    bg-gradient-to-r from-blue-700 to-blue-500 text-white
-                   hover:from-blue-500 hover:to-blue-700 hover:scale-105
-                   focus:outline-none focus:ring-2 focus:ring-blue-300 focus:ring-offset-2"
+                   hover:from-blue-500 hover:to-blue-700 hover:scale-105"
             @click="startDownload"
             :disabled="loading || (!isOwner && !guestToken)"
         >

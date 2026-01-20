@@ -8,17 +8,49 @@
             <span class="heart animate-float absolute bg-pink-200 w-1 h-1 rounded-full"></span>
         </div>
 
-        <p class="text-sm md:text-base z-10 relative font-sans">
-            &copy; 2025 Hochzeits-Album-Plattform. Alle Rechte vorbehalten.
-        </p>
+
+        <div
+            class="footer-bottom text-white py-4"
+        >
+            <div class="md:flex gap-4">
+            <router-link to="/datenschutz" class="underline hover:text-yellow-300 transition duration-300">
+                Datenschutz
+            </router-link>
+            <router-link to="/impressum" class="underline hover:text-yellow-300 transition duration-300">
+                Impressum
+            </router-link>
+        </div>
         <p class="text-xs md:text-sm text-pink-200 mt-1 md:mt-2 z-10 relative font-script">
-            Entwickelt mit ❤️ von Ihrem Team
+            Entwickelt mit ❤️ von unserem Team
         </p>
+                <div class="row justify-content-between align-items-center">
+                    <div class="col-md-7 col-lg-7">
+                        <div class="copyright-text d-flex">
+                            <p class="mb-lg-0 mb-md-0 pe-5">
+                                &copy; {{ new Date().getFullYear() }} <a href="https://eazycode.de" target="_blank">eazyCode
+                                Software GmbH</a>
+                            </p>
+                            <p class="mb-lg-0 mb-md-0 pe-3">
+                                <router-link to="/impressum" target="_blank">Impressum</router-link>
+                            </p>
+                            <p class="mb-lg-0 mb-md-0">
+                                <router-link to="/datenschutz" target="_blank">Datenschutz</router-link>
+                            </p>
+                        </div>
+                    </div>
+                    <div class="col-md-4 col-lg-4">
+                    </div>
+                </div>
+        </div>
     </footer>
 </template>
 
 <script>
-export default {};
+import Datenschutz from "./Datenschutz.vue";
+
+export default {
+    components: {Datenschutz}
+};
 </script>
 
 <style scoped>

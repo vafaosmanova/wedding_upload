@@ -22,7 +22,7 @@ class AlbumController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'title' => 'required|string|max:255',
+            'title' => 'required|string|max:50',
             'pin' => 'required|string|min:4|max:10',
         ]);
         $titleExists = Album::where('title', $request->title)

@@ -59,9 +59,6 @@
     </div>
 </template>
 <script>
-import axios from "axios";
-
-
 export default {
     name: "MediaApproval",
     props: {
@@ -98,8 +95,7 @@ export default {
     methods: {
         async loadPendingMedia() {
             try {
-                await axios.get("/sanctum/csrf-cookie", {withCredentials: true});
-                const res = await axios.get(`/api/media/pending/${this.albumId}`, {withCredentials: true});
+                const res = await this.$axios.get(`/api/media/pending/${this.albumId}`, {withCredentials: true});
                 this.pendingMedia = res.data.media.map(item => ({
                     ...item,
                     mime: item.mime_type ?? "video/mp4",
@@ -113,9 +109,7 @@ export default {
         },
         async approveMedia(media) {
             try {
-                await axios.get("/sanctum/csrf-cookie", {withCredentials: true});
-
-                await axios.post(`/api/media/${media.id}/approve`, {}, {withCredentials: true});
+                await this.$axios.post(`/api/media/${media.id}/approve`, {}, {withCredentials: true});
 
                 const index = this.pendingMedia.findIndex(m => m.id === media.id);
                 if (index !== -1) this.pendingMedia[index].approved = true;
@@ -128,8 +122,7 @@ export default {
         },
         async deleteMedia(media) {
             try {
-                await axios.get("/sanctum/csrf-cookie", {withCredentials: true});
-                await axios.delete(`/api/media/${media.id}`, {withCredentials: true});
+                await this.$axios.delete(`/api/media/${media.id}`, {withCredentials: true});
                 this.pendingMedia = this.pendingMedia.filter(m => m.id !== media.id);
                 this.$emit('deleted', media.id);
             } catch {
@@ -138,8 +131,7 @@ export default {
         },
         async exportAlbum() {
             try {
-                await axios.get("/sanctum/csrf-cookie", {withCredentials: true});
-                await axios.post(`/api/albums/${this.albumId}/export`, {withCredentials: true});
+                await this.$axios.post(`/api/albums/${this.albumId}/export`, {withCredentials: true});
                 this.exportProgress = 0;
                 this.trackExportProgress();
             } catch (err) {
@@ -151,7 +143,7 @@ export default {
 
             this.exportInterval = setInterval(async () => {
                 try {
-                    const res = await axios.get(
+                    const res = await this.$axios.get(
                         `/api/albums/${this.albumId}/export/progress`, {withCredentials: true});
                     this.exportProgress = res.data.progress ?? 0;
 
