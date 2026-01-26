@@ -1,6 +1,6 @@
 <template>
-    <section class="relative py-12 px-5 min-h-screen flex flex-col justify-center items-center">
-        <div>
+    <section class="min-h-screen py-12">
+        <div id="top">
             <h1 class="text-6xl font-script text-center text-white drop-shadow-lg mb-2">
                 Meine Hochzeitsalben
             </h1>
@@ -27,6 +27,7 @@
                     <MediaGallery
                         :album-id="selectedAlbumId"
                         @uploaded="onMediaUploaded"
+                        @new-media="onNewMedia"
                         ref="centralGallery"
                     />
                     <div class="md:flex-row gap-8 mt-2 justify-center">
@@ -36,12 +37,22 @@
                         />
                         <AlbumZipDownload
                             :album-id="selectedAlbumId"
-                            :isOwner="true"
+                            :isUser="true"
                         />
                     </div>
                 </div>
             </div>
         </div>
+        <a href="#top"
+           class="fixed bottom-6 right-6
+           w-10 h-10 rounded-full
+           bg-gray-400 text-white
+           flex items-center justify-center
+           shadow-lg hover:bg-gray-500"
+           aria-label="Back to top"
+        >
+            ↑
+        </a>
     </section>
 </template>
 <script>
@@ -110,7 +121,10 @@ export default {
                 exportProgress: 0,
             };
             this.albums.unshift(item);
-            this.selectedAlbumId = item.id;
+            this.$nextTick(()=>{
+                this.selectedAlbumId = item.id;
+            });
+
         },
         selectAlbum(albumId) {
             this.selectedAlbumId = albumId;
@@ -119,6 +133,9 @@ export default {
             this.newMediaAvailable = true;
         },
         onMediaApproved() {
+            this.loadAlbums();
+        },
+        onNewMedia() {
             this.loadAlbums();
         }
     }

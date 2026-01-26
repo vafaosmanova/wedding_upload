@@ -47,13 +47,12 @@ class ExportAlbumJob implements ShouldQueue
                 ->keyBy('id');
 
             if ($mediaCollection->isEmpty()) {
-                Redis::setex($redisKey, 3600, 100);
                 Log::warning("Media-Datensätze fehlen für Album {$this->albumId}.");
                 return;
             }
 
 
-            $tmpPath = sys_get_temp_dir(). "/album_{$this->albumId}_" . uniqid(). "zip";
+            $tmpPath = sys_get_temp_dir(). "/album_{$this->albumId}." . uniqid(). "zip";
 
             $zip = new ZipArchive();
             if ($zip->open($tmpPath, ZipArchive::CREATE) !== true) {
@@ -102,7 +101,7 @@ class ExportAlbumJob implements ShouldQueue
 
             $remotePath = "albums/{$this->albumId}/exports/album.zip";
             Storage::disk($disk)->put($remotePath, fopen($tmpPath, 'r'));
-
+            Redis::setex($redisKey, 3600, 100);
             @unlink($tmpPath);
 
             Redis::setex($redisKey, 3600, 100);

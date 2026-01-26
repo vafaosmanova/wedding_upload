@@ -1,6 +1,6 @@
 <template>
     <header
-        class="bg-gradient-to-r from-purple-700 to-pink-500 text-white shadow-md p-4 font-sans relative overflow-hidden">
+        class="bg-gradient-to-r from-purple-700 to-pink-500 text-white shadow-md p-4 relative overflow-hidden">
 
         <div class="absolute top-0 left-0 w-full h-full pointer-events-none">
             <span class="heart animate-float absolute bg-pink-300 w-2 h-2 rounded-full"></span>
@@ -24,18 +24,29 @@
             </button>
 
             <nav class="hidden md:flex gap-4 text-white text-lg font-sans">
-                <router-link to="/FeaturesSection" class="hover:text-yellow-300 transition-colors duration-200">
+                <a href="#features" class="hover:text-yellow-300 transition-colors duration-200">
                     Leistungen
-                </router-link>
-                <router-link to="/PricingSection" class="hover:text-yellow-300 transition-colors duration-200">Preise
-                </router-link>
-                <router-link to="/ContactSection" class="hover:text-yellow-300 transition-colors duration-200">Kontakt
-                </router-link>
-                <button @click.prevent="logout" class="hover:text-yellow-300 transition-colors duration-200">Logout
+                </a>
+
+                <a href="#pricing" class="hover:text-yellow-300 transition-colors duration-200">
+                    Preise
+                </a>
+
+                <a href="#contact" class="hover:text-yellow-300 transition-colors duration-200">
+                    Kontakt
+                </a>
+
+                <button @click.prevent="logout"
+                        class="hover:text-yellow-300 transition-colors duration-200">
+                    Logout
                 </button>
-                <router-link to="/login" class="hover:text-yellow-300 transition-colors duration-200">Login
+
+                <router-link to="/login"
+                             class="hover:text-yellow-300 transition-colors duration-200">
+                    Login
                 </router-link>
             </nav>
+
 
         </div>
 
@@ -43,19 +54,19 @@
             <nav v-if="isOpen" class="flex flex-col gap-3 mt-3 text-white font-sans md:hidden z-10 relative">
                 <ul>
                     <li>
-                        <router-link to="/FeaturesSection" class="hover:text-yellow-300 transition-colors duration-200">
+                        <a href="#features" class="hover:text-yellow-300 transition-colors duration-200">
                             Leistungen
-                        </router-link>
+                        </a>
                     </li>
                     <li>
-                        <router-link to="/PricingSection" class="hover:text-yellow-300 transition-colors duration-200">
+                        <a href="#pricing" class="hover:text-yellow-300 transition-colors duration-200">
                             Preise
-                        </router-link>
+                        </a>
                     </li>
                     <li>
-                        <router-link to="/ContactSection" class="hover:text-yellow-300 transition-colors duration-200">
+                        <a href="#contact" class="hover:text-yellow-300 transition-colors duration-200">
                             Kontakt
-                        </router-link>
+                        </a>
                     </li>
                     <li>
                         <router-link to="/login" class="hover:text-yellow-300 transition-colors duration-200">Login
@@ -69,12 +80,13 @@
                 </ul>
             </nav>
         </transition>
-
+<NavBar></NavBar>
     </header>
 </template>
 
 <script>
 export default {
+
     data() {
         return {
             isOpen: false,

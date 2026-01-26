@@ -11,7 +11,7 @@ class UploadController extends Controller
 {
     use MediaFormatter;
 
-    public function upload(Request $request, int $album_id, bool $isGuest = false)
+    public function upload(Request $request, int $album_id, bool $isGast = false)
     {
         $request->validate([
             'photos.*' => 'image|mimes:jpg,jpeg,png|max:5120',  // 5 MB
@@ -22,7 +22,7 @@ class UploadController extends Controller
         $disk = 'hetzner';
         $uploaded = collect();
 
-        $routeName = $isGuest ? 'guest.media.stream' : 'owner.media.stream';
+        $routeName = $isGast ? 'gast.media.stream' : 'user.media.stream';
 
         if ($request->hasFile('photos')) {
             foreach ($request->file('photos') as $file) {
@@ -36,7 +36,7 @@ class UploadController extends Controller
                 ]);
 
                 $uploaded->push(
-                    $this->formatMediaCollectionOwner(collect([$media]), 'image', $routeName)->first()
+                    $this->formatMediaCollectionUser(collect([$media]), 'image', $routeName)->first()
                 );
             }
         }
@@ -53,7 +53,7 @@ class UploadController extends Controller
                 ]);
 
                 $uploaded->push(
-                    $this->formatMediaCollectionOwner(collect([$media]), 'video', $routeName)->first()
+                    $this->formatMediaCollectionUser(collect([$media]), 'video', $routeName)->first()
                 );
             }
         }

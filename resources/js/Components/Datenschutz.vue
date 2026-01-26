@@ -1,26 +1,25 @@
 <template>
-    <section class="support-content">
+    <section class="mt-16">
         <div class="container px-5 px-md-0">
             <div class="row justify-content-between">
                 <div class="col-12 ptb-60">
-                    <div class="support-article-wrap m-4 p-4">
-                        <b><span class="h5">1. Datenschutz auf einen Blick</span> <br>
-
-                            <span class="h6">Allgemeine Hinweise</span> <br>
+                    <div class="m-4 p-4">
+                        <b><span>1. Datenschutz auf einen Blick</span> <br>
+                            <span>Allgemeine Hinweise</span> <br>
                         </b>Die folgenden Hinweise geben einen einfachen Überblick darüber, was mit Ihren
                         personenbezogenen Daten passiert, wenn Sie diese Website besuchen. Personenbezogene Daten sind
                         alle Daten, mit denen Sie persönlich identifiziert werden können. Ausführliche Informationen zum
                         Thema Datenschutz entnehmen Sie unserer unter diesem Text aufgeführten Datenschutzerklärung.
                         <br> <br>
-                        <b><span class="h6">Datenerfassung auf dieser Website</span> <br>
-                            <span class="h6">
+                        <b><span>Datenerfassung auf dieser Website</span> <br>
+                            <span>
                                 Wer ist verantwortlich für die Datenerfassung auf dieser Website?
                             </span> <br>
                         </b>Die Datenverarbeitung auf dieser Website erfolgt durch den Websitebetreiber. Dessen
                         Kontaktdaten können Sie dem Abschnitt „Hinweis zur Verantwortlichen Stelle“ in dieser
                         Datenschutzerklärung entnehmen.
                         <br><br>
-                        <b><span class="h6">Wie erfassen wir Ihre Daten?</span> <br>
+                        <b><span>Wie erfassen wir Ihre Daten?</span> <br>
                         </b>Ihre Daten werden zum einen dadurch erhoben, dass Sie uns diese mitteilen. Hierbei kann es
                         sich z. B. um Daten handeln, die Sie in ein Kontaktformular eingeben. Andere Daten werden
                         automatisch oder nach Ihrer Einwilligung beim Besuch der Website durch unsere IT- Systeme
@@ -28,11 +27,11 @@
                         des Seitenaufrufs). Die Erfassung dieser Daten erfolgt automatisch, sobald Sie diese Website
                         betreten.
                         <br><br>
-                        <b><span class="h6">Wofür nutzen wir Ihre Daten?</span> <br>
+                        <b><span>Wofür nutzen wir Ihre Daten?</span> <br>
                         </b>Ein Teil der Daten wird erhoben, um eine fehlerfreie Bereitstellung der Website zu
                         gewährleisten. Andere Daten können zur Analyse Ihres Nutzerverhaltens verwendet werden.
                         <br><br>
-                        <b><span class="h6">Welche Rechte haben Sie bezüglich Ihrer Daten?</span> <br>
+                        <b><span>Welche Rechte haben Sie bezüglich Ihrer Daten?</span> <br>
                         </b>Sie haben jederzeit das Recht, unentgeltlich Auskunft über Herkunft, Empfänger und Zweck
                         Ihrer gespeicherten personenbezogenen Daten zu erhalten. Sie haben außerdem ein Recht, die
                         Berichtigung oder Löschung dieser Daten zu verlangen. Wenn Sie eine Einwilligung zur
@@ -42,7 +41,7 @@
                         Beschwerderecht bei der zuständigen Aufsichtsbehörde zu. Hierzu sowie zu weiteren Fragen zum
                         Thema Datenschutz können Sie sich jederzeit an uns wenden.
                         <br><br>
-                        <b><span class="h5">
+                        <b><span>
                           3. Allgemeine Hinweise und Pflichtinformationen Datenschutz
                       </span> <br> </b> Die Betreiber dieser Seiten nehmen
                         den Schutz Ihrer persönlichen Daten sehr ernst. Wir behandeln Ihre personenbezogenen Daten
@@ -54,14 +53,14 @@
                         dass die Datenübertragung im Internet (z. B. bei der Kommunikation per E-Mail) Sicherheitslücken
                         aufweisen kann. Ein lückenloser Schutz der Daten vor dem Zugriff durch Dritte ist nicht möglich.
                         <br> <br>
-                        <b class="h6">Hinweis zur verantwortlichen Stelle</b> <br>Die verantwortliche Stelle für die
+                        <b>Hinweis zur verantwortlichen Stelle</b> <br>Die verantwortliche Stelle für die
                         Datenverarbeitung
                         auf dieser Website ist: Wadim Deibus Brüderstraße 17 89415 Lauingen Telefon: +49 (0)
                         9072 - 922022 - 0 E-Mail: info@eazycode.de Verantwortliche Stelle ist die natürliche oder
                         juristische Person, die allein oder gemeinsam mit anderen über die Zwecke und Mittel der
                         Verarbeitung von personenbezogenen Daten (z. B. Namen, E-Mail-Adressen o. Ä.) entscheidet. <br>
                         <br>
-                        <b class="h6">Speicherdauer</b> <br>
+                        <b>Speicherdauer</b> <br>
                         Soweit innerhalb dieser Datenschutzerklärung keine speziellere Speicherdauer genannt wurde,
                         verbleiben Ihre personenbezogenen Daten bei uns, bis der Zweck für die Datenverarbeitung
                         entfällt. Wenn Sie ein berechtigtes Löschersuchen geltend machen oder eine Einwilligung zur
@@ -69,7 +68,7 @@
                         zulässigen Gründe für die Speicherung Ihrer personenbezogenen Daten haben (z. B. steuer- oder
                         handelsrechtliche Aufbewahrungsfristen); im letztgenannten Fall erfolgt die Löschung nach
                         Fortfall dieser Gründe. <br><br>
-                        <b class="h6">Allgemeine Hinweise zu den Rechtsgrundlagen der Datenverarbeitung auf
+                        <b>Allgemeine Hinweise zu den Rechtsgrundlagen der Datenverarbeitung auf
                             dieser Website </b> <br>Sofern Sie in die Datenverarbeitung eingewilligt haben, verarbeiten
                         wir Ihre
                         personenbezogenen Daten auf Grundlage von Art. 6 Abs. 1 lit. a DSGVO bzw. Art. 9 Abs. 2 lit. a
@@ -86,13 +85,13 @@
                         unseres berechtigten Interesses nach Art. 6 Abs. 1 lit. f DSGVO erfolgen. Über die jeweils im
                         Einzelfall einschlägigen Rechtsgrundlagen wird in den folgenden Absätzen dieser
                         Datenschutzerklärung informiert. <br> <br> <br>
-                        <b class="h6">Widerruf Ihrer Einwilligung zur Datenverarbeitung </b> <br>Viele
+                        <b>Widerruf Ihrer Einwilligung zur Datenverarbeitung </b> <br>Viele
                         Datenverarbeitungsvorgänge sind
                         nur mit Ihrer ausdrücklichen Einwilligung möglich. Sie können eine bereits erteilte Einwilligung
                         jederzeit widerrufen. Die Rechtmäßigkeit der bis zum Widerruf erfolgten Datenverarbeitung bleibt
                         vom Widerruf unberührt.
                         <br><br>
-                        <b class="h6">Widerspruchsrecht gegen die Datenerhebung in besonderen Fällen sowie
+                        <b>Widerspruchsrecht gegen die Datenerhebung in besonderen Fällen sowie
                             gegen Direktwerbung (Art. 21 DSGVO) </b> <br>WENN DIE DATENVERARBEITUNG AUF GRUNDLAGE VON
                         ART. 6 ABS.
                         1 LIT. E ODER F DSGVO ERFOLGT, HABEN SIE JEDERZEIT DAS RECHT, AUS GRÜNDEN, DIE SICH AUS IHRER
@@ -110,19 +109,19 @@
                         WERDEN IHRE PERSONENBEZOGENEN DATEN ANSCHLIESSEND NICHT MEHR ZUM ZWECKE DER DIREKTWERBUNG
                         VERWENDET (WIDERSPRUCH NACH ART. 21 ABS. 2 DSGVO).
                         <br><br>
-                        <b class="h6">Recht auf Datenübertragbarkeit </b><br>Sie haben das Recht, Daten, die wir auf
+                        <b>Recht auf Datenübertragbarkeit </b><br>Sie haben das Recht, Daten, die wir auf
                         Grundlage Ihrer Einwilligung oder in Erfüllung eines Vertrags automatisiert verarbeiten, an sich
                         oder an einen Dritten in einem gängigen, maschinenlesbaren Format aushändigen zu lassen. Sofern
                         Sie die direkte Übertragung der Daten an einen anderen Verantwortlichen verlangen, erfolgt dies
                         nur, soweit es technisch machbar ist. <br><br>
 
-                        <b class="h6">Auskunft, Löschung und Berichtigung </b><br>Sie haben im
+                        <b>Auskunft, Löschung und Berichtigung </b><br>Sie haben im
                         Rahmen der geltenden gesetzlichen Bestimmungen jederzeit das Recht auf unentgeltliche Auskunft
                         über Ihre gespeicherten personenbezogenen Daten, deren Herkunft und Empfänger und den Zweck der
                         Datenverarbeitung und ggf. ein Recht auf Berichtigung oder Löschung dieser Daten. Hierzu sowie
                         zu weiteren Fragen zum Thema personenbezogene Daten können Sie sich jederzeit an uns wenden.
                         <br><br>
-                        <b class="h6">Recht auf Einschränkung der Verarbeitung </b><br>Sie haben das Recht, die
+                        <b>Recht auf Einschränkung der Verarbeitung </b><br>Sie haben das Recht, die
                         Einschränkung der Verarbeitung
                         Ihrer personenbezogenen Daten zu verlangen. Hierzu können Sie sich jederzeit an uns wenden. Das
                         Recht auf Einschränkung der Verarbeitung besteht in folgenden Fällen: - Wenn Sie die Richtigkeit
@@ -142,7 +141,7 @@
                         Verteidigung von Rechtsansprüchen oder zum Schutz der Rechte einer anderen natürlichen oder
                         juristischen Person oder aus Gründen eines wichtigen öffentlichen Interesses der Europäischen
                         Union oder eines Mitgliedstaats verarbeitet werden. <br><br>
-                        <b class="h6">SSL- bzw. TLS-Verschlüsselung </b><br>Diese
+                        <b>SSL- bzw. TLS-Verschlüsselung </b><br>Diese
                         Seite nutzt aus Sicherheitsgründen und zum Schutz der Übertragung vertraulicher Inhalte, wie zum
                         Beispiel Bestellungen oder Anfragen, die Sie an uns als Seitenbetreiber senden, eine SSL- bzw.
                         TLS- Verschlüsselung. Eine verschlüsselte Verbindung erkennen Sie daran, dass die Adresszeile
@@ -150,13 +149,13 @@
                         Browserzeile. Wenn die SSL- bzw. TLS-Verschlüsselung aktiviert ist, können die Daten, die Sie an
                         uns übermitteln, nicht von Dritten mitgelesen werden.
                         <br><br>
-                        <b class="h6">Widerspruch gegen Werbe-E-Mails </b><br>Der
+                        <b>Widerspruch gegen Werbe-E-Mails </b><br>Der
                         Nutzung von im Rahmen der Impressumspflicht veröffentlichten Kontaktdaten zur Übersendung von
                         nicht ausdrücklich angeforderter Werbung und Informationsmaterialien wird hiermit widersprochen.
                         Die Betreiber der Seiten behalten sich ausdrücklich rechtliche Schritte im Falle der
                         unverlangten Zusendung von Werbeinformationen, etwa durch Spam-E-Mails, vor.
                         <br><br>
-                        <b class="h6"> Server-Log-Dateien </b><br>Der Provider der Seiten erhebt und speichert
+                        <b> Server-Log-Dateien </b><br>Der Provider der Seiten erhebt und speichert
                         automatisch
                         Informationen in so genannten Server-Log- Dateien, die Ihr Browser automatisch an uns
                         übermittelt. Dies sind: <b> </b>- Browsertyp und Browserversion
@@ -169,7 +168,7 @@
                         Websitebetreiber hat ein berechtigtes Interesse an der technisch fehlerfreien Darstellung und
                         der Optimierung seiner Website – hierzu müssen die Server-Log-Files erfasst werden.
                         <br><br>
-                        <b class="h6">Kontaktformular</b><br>
+                        <b>Kontaktformular</b><br>
                         Wenn Sie uns per Kontaktformular Anfragen zukommen lassen, werden Ihre Angaben aus dem
                         Anfrageformular inklusive der von Ihnen dort angegebenen Kontaktdaten zwecks Bearbeitung der
                         Anfrage und für den Fall von Anschlussfragen bei uns gespeichert. Diese Daten geben wir nicht
@@ -184,7 +183,7 @@
                         entfällt (z. B. nach abgeschlossener Bearbeitung Ihrer Anfrage). Zwingende gesetzliche
                         Bestimmungen – insbesondere Aufbewahrungsfristen – bleiben unberührt.
                         <br><br>
-                        <b class="h6">Anfrage per E-Mail,
+                        <b>Anfrage per E-Mail,
                             Telefon oder Telefax </b><br>Wenn Sie uns per E-Mail, Telefon oder Telefax kontaktieren,
                         wird Ihre
                         Anfrage inklusive aller daraus hervorgehenden personenbezogenen Daten (Name, Anfrage) zum Zwecke
@@ -200,13 +199,13 @@
                         entfällt (z. B. nach abgeschlossener Bearbeitung Ihres Anliegens). Zwingende gesetzliche
                         Bestimmungen – insbesondere gesetzliche Aufbewahrungsfristen – bleiben unberührt.
                         <br><br>
-                        <b class="h6">Rechtsgrundlage</b> <br>
+                        <b>Rechtsgrundlage</b> <br>
                         Die Speicherung der Kommentare erfolgt auf Grundlage Ihrer Einwilligung (Art. 6 Abs. 1 lit. a
                         DSGVO). Sie können eine von Ihnen erteilte Einwilligung jederzeit widerrufen. Dazu reicht eine
                         formlose Mitteilung per E- Mail an uns. Die Rechtmäßigkeit der bereits erfolgten
                         Datenverarbeitungsvorgänge bleibt vom Widerruf unberührt.
                         <br><br>
-                        <b class="h6">hCaptcha</b><br> Wir nutzen hCaptcha (im
+                        <b>hCaptcha</b><br> Wir nutzen hCaptcha (im
                         Folgenden „hCaptcha“) auf dieser Website. Anbieter ist die Intuition Machines, Inc., 2211 Selig
                         Drive, Los Angeles, CA 90026, USA (im Folgenden „IMI“). Mit hCaptcha soll überprüft werden, ob
                         die Dateneingabe auf dieser Website (z. B. in einem Kontaktformular) durch einen Menschen oder
@@ -230,7 +229,7 @@
                         unter folgenden Links: https://www.hcaptcha.com/privacy und https://hcaptcha.com/terms. Quelle:
                         https://www.e-recht24.de<b> </b>
                         <br><br>
-                        <b class="h6">Cookiebot</b><br>
+                        <b>Cookiebot</b><br>
                         Wir nutzen der Zustimmungsverwaltungsdienst Cookiebot, der Usercentrics A/S, Havnegade 39, 1058
                         Kopenhagen, Dänemark (Usercentrics). Dies ermöglicht uns die Einwilligung der Websitenutzer zur
                         Datenverarbeitung einzuholen und zu verwalten. Die Verarbeitung ist zur Erfüllung einer
@@ -270,7 +269,7 @@
                         Bitte beachten Sie unsere generellen Ausführungen über die Löschung und Deaktivierung von
                         Cookies oben.
                         <!--                        <br><br>-->
-                        <!--                        <b class="h6">Hotjar</b><br>-->
+                        <!--                        <b>Hotjar</b><br>-->
                         <!--                        Wir nutzen Hotjar, um die Bedürfnisse unserer Nutzer besser zu verstehen und das Angebot auf-->
                         <!--                        dieser Website zu optimieren. Mithilfe der Technologie von Hotjar bekommen wir ein besseres-->
                         <!--                        Verständnis von den Erfahrungen unserer Nutzer (z.B. wie viel Zeit Nutzer auf welchen Seiten-->
@@ -285,7 +284,7 @@
                         <!--                        einzelne Nutzer zusammengeführt. Weitere Informationen finden Sie in Hotjars-->
                         <!--                        Datenschutzerklärung unter: https://www.hotjar.com/legal/policies/privacy.-->
                         <br><br>
-                        <b class="h6">HubSpot</b><br>
+                        <b>HubSpot</b><br>
                         Wir nutzen auf dieser Website HubSpot für unsere Online-Marketing-Aktivitäten. Dies ist ein
                         integriertes Software-Tool, mit dem wir verschiedene Aspekte unseres Online-Marketings abdecken.
                         Dazu zählen unter anderem E-Mail-Marketing, Social Media Publishing & Reporting,
@@ -296,7 +295,7 @@
                         Datenverarbeitung durch europäische Standards zugestimmt wurde. Mehr Informationen zu den
                         Datenschutzbestimmungen von HubSpot finden Sie unter: https://legal.hubspot.com/privacy-policy.
                         <br><br>
-                        <b class="h6">BunnyFont</b><br>
+                        <b>BunnyFont</b><br>
                         Wir verwenden BunnyFont, um die Darstellung von Schriftarten auf unserer Website zu verbessern.
                         BunnyFont ist ein Dienst, der Webfonts bereitstellt. Beim Aufruf unserer Seiten lädt Ihr Browser
                         die benötigten Webfonts in ihren Browsercache, um Texte und Schriftarten korrekt anzuzeigen. Zu
@@ -307,7 +306,7 @@
                         wird eine Standardschrift von Ihrem Computer genutzt. Weitere Informationen zu BunnyFont finden
                         Sie in der Datenschutzerklärung von BunnyFont unter: https://bunny.net/privacy.
                         <br><br>
-                        <!--                        <b class="h6">Google Analytics</b><br>-->
+                        <!--                        <b>Google Analytics</b><br>-->
                         <!--                        Wir verwenden Google Analytics, einen Webanalysedienst der Google Inc. („Google“). Google-->
                         <!--                        Analytics verwendet sog. „Cookies“, Textdateien, die auf Ihrem Computer gespeichert werden und-->
                         <!--                        die eine Analyse der Benutzung der Website durch Sie ermöglichen. Die durch den Cookie erzeugten-->
@@ -333,7 +332,7 @@
                         <!--                        Weitere Informationen zu den Nutzungsbedingungen und dem Datenschutz finden Sie unter-->
                         <!--                        https://www.google.com/analytics/terms/de.html bzw. unter https://policies.google.com/?hl=de.-->
                         <!--                        <br><br>-->
-                        <!--                        <b class="h6">Google Tag Manager</b><br>-->
+                        <!--                        <b>Google Tag Manager</b><br>-->
                         <!--                        Diese Website verwendet den Google Tag Manager. Der Google Tag Manager ist eine Lösung, mit der-->
                         <!--                        Website-Tags über eine Oberfläche verwaltet werden können. Das Tool selbst (das die Tags-->
                         <!--                        implementiert) ist eine cookielose Domain und erfasst keine personenbezogenen Daten. Das Tool-->
@@ -343,7 +342,7 @@
                         <!--                        implementiert werden. Weitere Informationen zum Google Tag Manager finden Sie unter:-->
                         <!--                        https://www.google.com/intl/de/tagmanager/use-policy.html.-->
                         <!--                        <br><br>-->
-                        <!--                        <b class="h6">Google AdSense</b><br>-->
+                        <!--                        <b>Google AdSense</b><br>-->
                         <!--                        Diese Website nutzt Google AdSense, einen Dienst zum Einbinden von Werbeanzeigen der Google Inc.-->
                         <!--                        („Google“). Google AdSense verwendet sog. „Cookies“, Textdateien, die auf Ihrem Computer-->
                         <!--                        gespeichert werden und die eine Analyse der Benutzung der Website ermöglichen. Google AdSense-->
@@ -374,6 +373,4 @@
         </div>
     </section>
 </template>
-<script setup lang="ts">
-</script>
 

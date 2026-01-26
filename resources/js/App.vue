@@ -1,7 +1,7 @@
 <template>
         <Header/>
         <main>
-            <div class="relative text-xl mb-4 text-center bg-gradient-to-r from-purple-200 to-purple-800 justify-center items-center overflow-hidden">
+            <div>
             <router-view></router-view>
             </div>
         </main>

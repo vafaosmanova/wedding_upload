@@ -54,21 +54,32 @@ class AlbumController extends Controller
     {
         $album = Album::findOrFail($album_id);
         if ($album->user_id !== auth()->id()) {
-            return response()->json(['message' => 'Album aktualisiert', 'album' => $album]);
+            return response()->json(['message' => 'Zugriff verweigert'], 403);
         }
         $request->validate(['title' => 'nullable|string|max:255', 'pin' => 'nullable|string|min:4|max:10']);
-        $album->update($request->only(['title', 'pin']));
-        return response()->json([
-            'message' => 'Album aktualisiert',
-            'album' => $album
-        ]);
-    }
+        if($request->has('title')) {
+            $album->update(['title'=>$request->title]);
+        }
+        if ($request->has('pin')) {
+            $pinExists = Pin::where('pin', $request->pin)
+                ->whereHas('album', fn($q) =>
+                $q->where('user_id', auth()->id())
+                    ->where('id', '!=', $album->id)
+                )->exists();
 
+            if ($pinExists) {
+                return response()->json([
+                    'message' => 'Diese PIN wird bereits verwendet.'
+                ], 422);
+            }
+        }
+
+    }
     public function destroy($album_id)
     {
         $album = Album::findOrFail($album_id);
         if ($album->user_id !== auth()->id()) {
-            return response()->json(['message' => 'Nicht autorisiert'], 403);
+            return response()->json(['message' => 'Zugriff verweigert'], 403);
         }
         foreach ($album->media as $mediaItem) {
             Storage::disk('hetzner')->delete($mediaItem->path);
@@ -82,7 +93,7 @@ class AlbumController extends Controller
         $album = Album::findOrFail($album_id);
 
         if ($album->user_id !== auth()->id()) {
-            return response()->json(['message' => 'Nicht autorisiert'], 403);
+            return response()->json(['message' => 'Zugriff verweigert'], 403);
         }
         try {
             ExportAlbumJob::dispatch($album_id)->onQueue('exports');
@@ -127,7 +138,7 @@ class AlbumController extends Controller
         $album = Album::findOrFail($album_id);
 
         if ($album->user_id !== auth()->id()) {
-            return response()->json(['message' => 'Nicht autorisiert'], 403);
+            return response()->json(['message' => 'Zugriff verweigert'], 403);
         }
 
         $disk = 'hetzner';

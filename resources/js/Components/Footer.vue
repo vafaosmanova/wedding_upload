@@ -17,7 +17,7 @@
                 Datenschutz
             </router-link>
             <router-link to="/impressum" class="underline hover:text-yellow-300 transition duration-300">
-                Impressum
+                     Impressum
             </router-link>
         </div>
         <p class="text-xs md:text-sm text-pink-200 mt-1 md:mt-2 z-10 relative font-script">
@@ -29,12 +29,6 @@
                             <p class="mb-lg-0 mb-md-0 pe-5">
                                 &copy; {{ new Date().getFullYear() }} <a href="https://eazycode.de" target="_blank">eazyCode
                                 Software GmbH</a>
-                            </p>
-                            <p class="mb-lg-0 mb-md-0 pe-3">
-                                <router-link to="/impressum" target="_blank">Impressum</router-link>
-                            </p>
-                            <p class="mb-lg-0 mb-md-0">
-                                <router-link to="/datenschutz" target="_blank">Datenschutz</router-link>
                             </p>
                         </div>
                     </div>

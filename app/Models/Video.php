@@ -6,7 +6,6 @@ use Closure;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Support\Facades\Storage;
 
 /**
  * @method static where(string $string, $albumId)
@@ -25,10 +24,6 @@ class Video extends Model
         'approved'
     ];
     protected $appends = ['url'];
-    public function getUrlAttribute()
-    {
-        return Storage::disk(config('filesystems.default'))->url($this->path);
-    }
     public function album(): BelongsTo
     {
         return $this->belongsTo(Album::class);

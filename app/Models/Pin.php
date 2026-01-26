@@ -15,7 +15,7 @@ class Pin extends Model
         'album_id',
         'pin'
     ];
-
+    //Beziehung: Ein Pin gehört zu einem Album (1:1)
     public function album(): BelongsTo
     {
         return $this->belongsTo(Album::class);

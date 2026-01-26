@@ -8,7 +8,7 @@
             <span class="heart animate-float absolute bg-white w-1.5 h-1.5 rounded-full bottom-12 right-16"></span>
         </div>
         <div class="card relative z-10">
-            <h2 class="text-3xl text-purple-700 mb-6 font-script text-center">Login</h2>
+            <h2 class="font-script text-purple-700 text-5xl font-bold mb-10">Login</h2>
             <form @submit.prevent="login" class="flex flex-col gap-4">
                 <input v-model="form.email" type="email" placeholder="E-Mail" class="input-field" />
                 <input v-model="form.password" type="password" placeholder="Passwort" class="input-field" />

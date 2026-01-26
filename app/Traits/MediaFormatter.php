@@ -6,9 +6,9 @@ use Illuminate\Support\Facades\Route;
 
 trait MediaFormatter
 {
-    public function formatMediaCollectionGuest($media, string $type)
+    public function formatMediaCollectionGast($media, string $type)
     {
-        $routeName = 'guest.media.stream';
+        $routeName = 'gast.media.stream';
         return $media->map(fn($m) => [
             'id' => $m->id,
             'filename' => $m->filename,
@@ -21,9 +21,9 @@ trait MediaFormatter
             'type'     => $type,
         ]);
     }
-    public function formatMediaCollectionOwner($media, string $type, string $routeName = null)
+    public function formatMediaCollectionUser($media, string $type, string $routeName = null)
     {
-        $routeName = $routeName ?? 'owner.media.stream';
+        $routeName = $routeName ?? 'user.media.stream';
 
         return $media->map(fn($m) => [
             'id' => $m->id,

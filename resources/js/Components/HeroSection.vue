@@ -1,27 +1,28 @@
 <template>
     <div
-        class="relative text-5xl text-purple-700 font-script text-center bg-gradient-to-r from-purple-200 to-purple-800-800 flex col justify-center items-center overflow-hidden">
-        <h1 class="text-5xl font-dancing mb-5 drop-shadow-lg">
+        class="relative text-purple-700 font-script text-center bg-gradient-to-r from-purple-200 to-purple-800-800 flex col justify-center items-center overflow-hidden" id="top">
+        <h1 class="text-5xl mb-5">
             Die Foto-App für deine Hochzeitsgäste
         </h1>
-        <p class="text-xl mb-10 opacity-90">
+        <p class="mb-10">
             Alle Bilder deiner Hochzeit einfach teilen und sichern – ganz ohne Stress.
         </p>
     </div>
     <section
-        class="relative py-12 px-5 min-h-screen bg-gradient-to-r from-purple-200 to-purple-800-800 flex justify-center items-center overflow-hidden">
-
-
+        class="relative py-12 px-5 min-h-screen flex justify-center items-center overflow-hidden">
         <div class="hidden md:flex flex-col gap-8 absolute left-0 top-1/4 z-0">
             <img src="/assets/images/img1.jpg" alt="Couple 1"
-                 class="w-64 md:w-80 animate-float-slow rounded-xl shadow-lg"/>
+                class="w-64 md:w-80 animate-float rounded-xl shadow-lg"
+                style="--y:-15px; --rot:1deg; --rot2:-2deg"
+            />
             <img src="/assets/images/img2.jpg" alt="Couple 2"
-                 class="w-56 md:w-72 animate-float-variation1 rounded-xl shadow-lg"/>
-
+                class="w-64 md:w-80 animate-float rounded-xl shadow-lg"
+                style="--y:-15px; --rot:1deg; --rot2:-2deg"
+            />
         </div>
 
         <div class="bg-purple-200 shadow-xl rounded-3xl p-10 max-w-md w-full z-10 relative">
-            <h2 class="text-5xl text-purple-700 mb-6 font-script text-center">Registrieren</h2>
+            <h1 class="font-script text-purple-700 text-5xl font-bold text-center mb-10">Registrieren</h1>
 
             <form @submit.prevent="register" class="flex flex-col gap-4">
                 <input v-model="form.name" placeholder="Name" class="input-field"/>
@@ -36,7 +37,7 @@
                 <p v-if="Object.keys(errors).length" class="error-text mt-2 text-center">{{ formatErrors }}</p>
             </form>
 
-            <p class="mt-6 text-base text-center">
+            <p class="text-xl text-gray-400 font-bold text-center mt-10">
                 Bereits registriert?
                 <router-link to="/login" class="underline hover:text-yellow-300 transition duration-300">
                     Zum Login
@@ -46,14 +47,29 @@
 
         <div class="hidden md:flex flex-col gap-8 absolute right-0 top-1/4 z-0">
             <img src="/assets/images/img3.jpg" alt="Couple 3"
-                 class="w-56 md:w-72 animate-float-variation2 rounded-xl shadow-lg"/>
+                class="w-64 md:w-80 animate-float rounded-xl shadow-lg"
+                style="--y:-15px; --rot:1deg; --rot2:-2deg"
+            />
             <img src="/assets/images/img4.jpg" alt="Couple 4"
-                 class="w-64 md:w-80 animate-float-variation3 rounded-xl shadow-lg"/>
+                class="w-64 md:w-80 animate-float rounded-xl shadow-lg"
+                style="--y:-15px; --rot:1deg; --rot2:-2deg"
+            />
+
         </div>
     </section>
-    <FeaturesSection class="mt-24"/>
-    <PricingSection class="mt-16"/>
-    <ContactSection class="mt-16"/>
+    <FeaturesSection id="features" class="mt-24" />
+    <PricingSection id="pricing" class="mt-16"  />
+    <ContactSection id="contact" class="mt-16"/>
+    <a href="#top"
+        class="fixed bottom-6 right-6
+           w-10 h-10 rounded-full
+           bg-gray-400 text-white
+           flex items-center justify-center
+           shadow-lg hover:bg-gray-500"
+        aria-label="Back to top"
+    >
+        ↑
+    </a>
 </template>
 
 <script>
@@ -109,100 +125,13 @@ export default {
 </script>
 
 <style scoped>
-/* Floating animations for images */
-@keyframes float-slow {
-    0% {
-        transform: translateY(0) rotate(0deg);
-    }
-    50% {
-        transform: translateY(-15px) rotate(2deg);
-    }
-    100% {
-        transform: translateY(0) rotate(0deg);
-    }
+@keyframes float {
+    0%   { transform: translateY(0) rotate(var(--rot)); }
+    50%  { transform: translateY(var(--y)) rotate(var(--rot2)); }
+    100% { transform: translateY(0) rotate(var(--rot)); }
 }
 
-@keyframes float-slower {
-    0% {
-        transform: translateY(0) rotate(0deg);
-    }
-    50% {
-        transform: translateY(-8px) rotate(-1deg);
-    }
-    100% {
-        transform: translateY(0) rotate(0deg);
-    }
-}
-
-@keyframes float-variation1 {
-    0% {
-        transform: translateY(0) rotate(1deg);
-    }
-    50% {
-        transform: translateY(-12px) rotate(-2deg);
-    }
-    100% {
-        transform: translateY(0) rotate(1deg);
-    }
-}
-
-@keyframes float-variation2 {
-    0% {
-        transform: translateY(0) rotate(-1deg);
-    }
-    50% {
-        transform: translateY(-10px) rotate(1deg);
-    }
-    100% {
-        transform: translateY(0) rotate(-1deg);
-    }
-}
-
-@keyframes float-variation3 {
-    0% {
-        transform: translateY(0) rotate(2deg);
-    }
-    50% {
-        transform: translateY(-14px) rotate(-1deg);
-    }
-    100% {
-        transform: translateY(0) rotate(2deg);
-    }
-}
-
-@keyframes float-variation4 {
-    0% {
-        transform: translateY(0) rotate(-2deg);
-    }
-    50% {
-        transform: translateY(-16px) rotate(2deg);
-    }
-    100% {
-        transform: translateY(0) rotate(-2deg);
-    }
-}
-
-.animate-float-slow {
-    animation: float-slow 6s ease-in-out infinite;
-}
-
-.animate-float-slower {
-    animation: float-slower 8s ease-in-out infinite;
-}
-
-.animate-float-variation1 {
-    animation: float-variation1 7s ease-in-out infinite;
-}
-
-.animate-float-variation2 {
-    animation: float-variation2 6.5s ease-in-out infinite;
-}
-
-.animate-float-variation3 {
-    animation: float-variation3 7.5s ease-in-out infinite;
-}
-
-.animate-float-variation4 {
-    animation: float-variation4 8s ease-in-out infinite;
+.animate-float {
+    animation: float 7s ease-in-out infinite;
 }
 </style>

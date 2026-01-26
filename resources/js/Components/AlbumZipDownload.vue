@@ -2,12 +2,12 @@
     <div class="text-center mt-6">
         <button
             class="px-5 py-2 rounded-lg
-                   bg-gradient-to-r from-blue-700 to-blue-500 text-white
-                   hover:from-blue-500 hover:to-blue-700 hover:scale-105"
+                   bg-gradient-to-r from-blue-700 to-blue-600 text-white
+                   hover:from-blue-600 hover:to-blue-700 hover:scale-105"
             @click="startDownload"
-            :disabled="loading || (!isOwner && !guestToken)"
+            :disabled="loading || (!isUser && !gastToken)"
         >
-            <span v-if="!loading">ZIP herunterladen</span>
+            <span v-if="!loading">Album herunterladen</span>
             <span v-else>Lädt...</span>
         </button>
 
@@ -21,8 +21,8 @@ export default {
 
     props: {
         albumId: { type: Number, required: true },
-        isOwner: { type: Boolean, required: true },
-        guestToken: { type: String, default: true}
+        isUser: { type: Boolean, required: true },
+        gastToken: { type: String, default: ""}
     },
 
     data() {
@@ -33,8 +33,8 @@ export default {
     },
 
     watch: {
-        guestToken(newToken) {
-            if (!this.isOwner && newToken) {
+        gastToken(newToken) {
+            if (!this.isUser && newToken) {
                 this.error = "";
             }
         }
@@ -45,16 +45,16 @@ export default {
             this.error = "";
             this.loading = true;
             try {
-                const endpoint = this.isOwner
+                const endpoint = this.isUser
                     ? `/api/albums/${this.albumId}/export/download`
-                    : `/api/guest/albums/${this.albumId}/guest/download`;
+                    : `/api/gast/albums/${this.albumId}/gast/download`;
                 const headers = {};
-                if (!this.isOwner && this.guestToken) {
-                    headers["Guest-Token"] = this.guestToken;
+                if (!this.isUser && this.gastToken) {
+                    headers["Gast-Token"] = this.gastToken;
                 }
                 const response = await fetch(endpoint, {
                     headers,
-                    credentials: this.isOwner ? "include" : undefined
+                    credentials: this.isUser ? "include" : undefined
                 });
                 if (!response.ok) {
                     if (response.status === 404) this.error = "ZIP-Datei ist noch nicht verfügbar.";

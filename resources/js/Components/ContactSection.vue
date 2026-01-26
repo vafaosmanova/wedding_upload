@@ -1,6 +1,6 @@
 <template>
     <section class="bg-gradient-to-r from-purple-700 to-blue-500 text-white text-center py-24 px-5">
-        <h2 class="text-4xl font-bold mb-4">Kontakt</h2>
+        <h2 class="font-script text-5xl font-bold text-center mb-10">Kontakt</h2>
 
         <div class="max-w-md mx-auto mt-10 p-6 rounded-xl shadow bg-gradient-to-b from-purple-200 to-purple-800">
             ">

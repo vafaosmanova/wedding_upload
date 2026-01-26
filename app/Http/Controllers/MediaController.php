@@ -20,8 +20,8 @@ class MediaController extends Controller
             ->where('approved', false)
             ->get();
 
-        $type = 'image';
-        $formatted = $this->formatMediaCollectionOwner(
+        $type = '';
+        $formatted = $this->formatMediaCollectionUser(
             $media->map(function ($item) use (&$type) {
                 $type = Str::startsWith($item->mime_type, 'video/') ? 'video' : 'image';
                 return $item;
@@ -70,13 +70,14 @@ class MediaController extends Controller
         }
 
         $media->delete();
+        Redis::srem("album:{$media->album_id}:approved_media", $media->id);
         return response()->json(['message' => 'Media deleted']);
     }
 
     /**
-     * Streamen für Besitzer
+     * Streamen für User
      */
-    public function streamOwnerMedia($media_id)
+    public function streamUserMedia($media_id)
     {
         $media = Media::findOrFail($media_id);
 

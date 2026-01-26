@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Random\RandomException;
 
-class GuestAlbumController extends Controller
+class GastAlbumController extends Controller
 {
     use MediaFormatter;
 
@@ -47,7 +47,7 @@ class GuestAlbumController extends Controller
         $token = bin2hex(random_bytes(16));
 
         try {
-            Redis::setex("guest_token:{$token}", 86400, $album_id);
+            Redis::setex("gast_token:{$token}", 86400, $album_id);
         } catch (Exception) {
             return response()->json([
                 'success' => false,
@@ -63,8 +63,8 @@ class GuestAlbumController extends Controller
 
     public function media(Request $request, $album_id)
     {
-        $token = $request->header('Guest-Token');
-        $redisAlbumId = Redis::get("guest_token:{$token}");
+        $token = $request->header('Gast-Token');
+        $redisAlbumId = Redis::get("gast_token:{$token}");
         if (!$token || !$redisAlbumId || $redisAlbumId != $album_id) {
             return response()->json(['message' => 'Unauthorized'], 401);
         }
@@ -73,7 +73,7 @@ class GuestAlbumController extends Controller
             ->get();
 
         $type = 'image';
-        $formatted = $this->formatMediaCollectionGuest(
+        $formatted = $this->formatMediaCollectionGast(
             $media->map(function($item) use (&$type) {
                 $type = Str::startsWith($item->mime_type, 'video/') ? 'video' : 'image';
                 return $item;
@@ -85,8 +85,8 @@ class GuestAlbumController extends Controller
         }
     public function streamMedia(Request $request, $album_id, $media_id)
     {
-        $token = $request->header('Guest-Token');
-        $redisAlbumId = Redis::get("guest_token:{$token}");
+        $token = $request->header('Gast-Token');
+        $redisAlbumId = Redis::get("gast_token:{$token}");
         if (!$token || !$redisAlbumId || $redisAlbumId != $album_id) {
             return response()->json(['message' => 'Unauthorized'], 401);
         }
@@ -102,8 +102,8 @@ class GuestAlbumController extends Controller
     }
     public function downloadZip(Request $request, int $album_id)
     {
-        $token = $request->header('Guest-Token');
-        $redisAlbumId = Redis::get("guest_token:{$token}");
+        $token = $request->header('Gast-Token');
+        $redisAlbumId = Redis::get("gast_token:{$token}");
 
         if (!$token || !$redisAlbumId || $redisAlbumId != $album_id) {
             return response()->json(['message' => 'Unauthorized'], 401);

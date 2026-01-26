@@ -8,7 +8,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
-use Illuminate\Support\Facades\Storage;
 use SimpleSoftwareIO\QrCode\Generator;
 
 /**
@@ -39,6 +38,7 @@ class Album extends Model
         $album->save();
         return $album;
     }
+    //Beziehung: Ein Album gehört zu ein User (n:1)
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
@@ -48,12 +48,9 @@ class Album extends Model
     {
         return $this->hasMany(Media::class);
     }
+    //Beziehung: Ein Album besitzt ein Pin (1:1)
     public function pin(): HasOne
     {
         return $this->hasOne(Pin::class);
-    }
-    public function sharedUsers(): BelongsToMany
-    {
-        return $this->belongsToMany(User::class, 'album_user', 'album_id', 'user_id');
     }
 }

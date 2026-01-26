@@ -1,8 +1,7 @@
 <template>
-    <section class="relative py-12 px-5 min-h-screen flex flex-col justify-center items-center">
-        <div class="w-full max-w-7xl bg-white/25 backdrop-blur-xl border border-white/30
-                rounded-3xl shadow-2xl p-10 text-gray-900">
-            <div class="mt-20">
+    <section class="min-h-screen">
+
+            <div class="mt-20" id="top">
                 <PinVerification
                     v-if="!pinVerified"
                     :album-id="albumId"
@@ -10,7 +9,7 @@
                 />
                 <div v-else>
                     <h1 class="text-6xl font-script text-center text-white drop-shadow-lg mb-12">
-                        Gästebereich – Album {{ albumId }}
+                        Album: Album {{ albumId }}
                     </h1>
 
                     <div class="bg-white/30 backdrop-blur-xl border border-white/20 rounded-3xl shadow-xl p-10">
@@ -18,23 +17,32 @@
                         <MediaGallery
                             ref="gallery"
                             :album-id="albumId"
-                            :guest-token="guestToken"
-                            @uploaded="onGuestUpload"
+                            :gast-token="gastToken"
+                            @uploaded="onGastUpload"
                             @new-media="onNewMedia"
                         />
 
                         <div class="mt-10 flex justify-center">
                             <AlbumZipDownload
                                 :album-id="albumId"
-                                :isOwner="false"
-                                :guestToken="guestToken"
+                                :isUser="false"
+                                :gastToken="gastToken"
                             />
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
 
+        <a href="#top"
+           class="fixed bottom-6 right-6
+           w-10 h-10 rounded-full
+           bg-gray-400 text-white
+           flex items-center justify-center
+           shadow-lg hover:bg-gray-500"
+           aria-label="Back to top"
+        >
+            ↑
+        </a>
     </section>
 </template>
 
@@ -49,17 +57,17 @@ export default {
     data() {
         return {
             pinVerified: false,
-            guestToken: null,
+            gastToken: null,
             newMediaAvailable: false
         };
     },
     methods: {
         onPinVerified(token) {
             this.pinVerified = true;
-            this.guestToken = token;
+            this.gastToken = token;
             this.$nextTick(() => this.refreshGallery());
         },
-        onGuestUpload() {
+        onGastUpload() {
             this.refreshGallery();
         },
         onNewMedia() {

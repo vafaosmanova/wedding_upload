@@ -18,7 +18,7 @@ body {
 /* Links */
 a {
     @apply transition-colors duration-300;
-    color: #fd70eb;
+    color: white;
 }
 a:hover {
     color: #6a11cb;
@@ -27,10 +27,6 @@ a:hover {
 /* -------------------- HEADER -------------------- */
 .header {
     @apply sticky top-0 z-50 flex justify-between items-center px-5 py-4 backdrop-blur-sm bg-purple-600/60 shadow-md;
-}
-
-.header .logo {
-    @apply text-6xl font-script text-purple-700;
 }
 
 .header .nav ul {
@@ -52,11 +48,11 @@ a:hover {
 }
 
 .hero h1 {
-    @apply text-8xl font-script drop-shadow-lg;
+    @apply text-5xl font-script drop-shadow-lg;
 }
 
 .hero p {
-    @apply text-8xl mt-5 opacity-90;
+    @apply text-xl mb-10 opacity-90;
 }
 
 .hero a.button {
@@ -74,6 +70,9 @@ a:hover {
 
 .card p {
     @apply text-gray-700 leading-relaxed;
+}
+.album-card {
+    @apply relative w-full bg-slate-300 p-6 rounded-lg shadow overflow-hidden;
 }
 
 /* -------------------- BUTTONS -------------------- */
@@ -131,10 +130,19 @@ a:hover {
 }
 
 /* -------------------- FLOATING HEARTS / ORNAMENTS -------------------- */
-@keyframes float {
-    0% { transform: translateY(0) scale(1); opacity: 1; }
-    50% { transform: translateY(-12px) scale(1.2); opacity: 0.7; }
-    100% { transform: translateY(0) scale(1); opacity: 1; }
+@keyframes float-heart {
+    0% {
+        transform: translateY(0) rotate(-45deg) scale(1);
+        opacity: 1;
+    }
+    50% {
+        transform: translateY(-12px) rotate(-45deg) scale(1.2);
+        opacity: 0.7;
+    }
+    100% {
+        transform: translateY(0) rotate(-45deg) scale(1);
+        opacity: 1;
+    }
 }
 
 .heart {
@@ -142,8 +150,7 @@ a:hover {
     width: 20px;
     height: 20px;
     background-color: #fd70eb;
-    transform: rotate(-45deg);
-    animation: float 6s ease-in-out infinite;
+    animation: float-heart 6s ease-in-out infinite;
 }
 
 .heart::before,
@@ -152,36 +159,17 @@ a:hover {
     position: absolute;
     width: 20px;
     height: 20px;
-    background-color: #fd70eb;
+    background-color: inherit;
     border-radius: 50%;
 }
 
-.heart::before {
-    top: -10px;
-    left: 0;
-}
+.heart::before { top: -10px; left: 0; }
+.heart::after  { top: 0; left: 10px; }
 
-.heart::after {
-    top: 0;
-    left: 10px;
-}
-
-@keyframes float {
-    0% { transform: translateY(0) rotate(-45deg); opacity: 1; }
-    50% { transform: translateY(-15px) rotate(-45deg); opacity: 0.7; }
-    100% { transform: translateY(0) rotate(-45deg); opacity: 1; }
-}
-
-.heart-small {
-    @apply w-1.5 h-1.5 bg-pink-300;
-}
-
-.heart-medium {
-    @apply w-2 h-2 bg-white;
-}
-
-.heart-large {
-    @apply w-2.5 h-2.5 bg-pink-200;
+@keyframes float-slow {
+    0% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+    100% { transform: translateY(0); }
 }
 
 /* -------------------- RESPONSIVE -------------------- */
@@ -189,24 +177,9 @@ a:hover {
     .header .nav ul {
         @apply flex-col gap-4 mt-4;
     }
-
-    .card {
-        @apply max-w-full mx-4;
-    }
-
-    .hero h1 {
-        @apply text-8xl;
-    }
-
     .hero p {
         @apply text-lg;
     }
-    @keyframes float-slow {
-        0% { transform: translateY(0); }
-        50% { transform: translateY(-10px); }
-        100% { transform: translateY(0); }
-    }
-
     .animate-float-slow {
         animation: float-slow 5s ease-in-out infinite;
     }

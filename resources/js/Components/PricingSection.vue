@@ -1,7 +1,7 @@
 <template>
     <section class="bg-gradient-to-r from-purple-700 to-blue-500 text-white text-center py-24 px-5">
         <div class="max-w-6xl mx-auto px-5">
-            <h2 class="text-4xl font-bold mb-4">Preise</h2>
+            <h2 class="font-script text-5xl font-bold text-center mb-10">Preise</h2>
 
             <div class="flex flex-wrap justify-center gap-10 p-6">
 
