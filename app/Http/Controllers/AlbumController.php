@@ -2,11 +2,9 @@
 
 namespace App\Http\Controllers;
 
-
 use App\Jobs\ExportAlbumJob;
 use App\Models\Album;
 use App\Models\Pin;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Redis;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -19,6 +17,7 @@ class AlbumController extends Controller
         $albums = Album::where('user_id', auth()->id())->get();
         return response()->json($albums);
     }
+
     public function store(Request $request)
     {
         $request->validate([
@@ -28,12 +27,10 @@ class AlbumController extends Controller
         $titleExists = Album::where('title', $request->title)
             ->where('user_id', auth()->id())
             ->exists();
-
         if ($titleExists) {
             return response()->json(['message' => 'Ein Album mit diesem Namen existiert bereits.'],
                 422);
         }
-
         $pinExists = Pin::where('pin', $request->pin)
             ->whereHas('album', fn($q) => $q->where('user_id', auth()->id()))->exists();
 
@@ -45,7 +42,6 @@ class AlbumController extends Controller
             Pin::create(['pin' => $request->pin, 'album_id' => $album->id,]);
             return response()->json(['album' => $album, 'qr_code' => $album->qr_code, 'pin' => $request->pin,], 201);
         } catch (Throwable $e) {
-            Log::error("Fehler beim Erstellen des Albums: " . $e->getMessage());
             return response()->json(['message' => 'Fehler beim Erstellen des Albums'], 500);
         }
     }
@@ -56,24 +52,25 @@ class AlbumController extends Controller
         if ($album->user_id !== auth()->id()) {
             return response()->json(['message' => 'Zugriff verweigert'], 403);
         }
-        $request->validate(['title' => 'nullable|string|max:255', 'pin' => 'nullable|string|min:4|max:10']);
-        if($request->has('title')) {
-            $album->update(['title'=>$request->title]);
+        $request->validate([
+            'title' => 'nullable|string|max:50',
+            'pin' => 'nullable|string|min:4|max:10'
+        ]);
+        if ($request->has('title')) {
+            $album->update(['title' => $request->title]);
         }
         if ($request->has('pin')) {
             $pinExists = Pin::where('pin', $request->pin)
-                ->whereHas('album', fn($q) =>
-                $q->where('user_id', auth()->id())
+                ->whereHas('album', fn($q) => $q->where('user_id', auth()->id())
                     ->where('id', '!=', $album->id)
                 )->exists();
-
             if ($pinExists) {
-                return response()->json([
-                    'message' => 'Diese PIN wird bereits verwendet.'
+                return response()->json(['message' => 'Diese PIN wird bereits verwendet.'
                 ], 422);
             }
+            $album->pin->update(['pin' => $request->pin]);
         }
-
+        return response()->json(['album' => $album]);
     }
     public function destroy($album_id)
     {
@@ -87,7 +84,6 @@ class AlbumController extends Controller
         $album->delete();
         return response()->json(['message' => 'Album gelöscht']);
     }
-
     public function exportAlbum(int $album_id)
     {
         $album = Album::findOrFail($album_id);
@@ -108,9 +104,10 @@ class AlbumController extends Controller
             return response()->json([
                 'message' => 'Fehler beim Starten des Exports',
                 'album_id' => $album_id
-                ], 500);
+            ], 500);
         }
     }
+
     public function progress(int $album_id)
     {
         $value = Redis::get("album_export_progress:{$album_id}");
@@ -122,17 +119,18 @@ class AlbumController extends Controller
             ]);
         }
 
-        $progress = (int) $value;
+        $progress = (int)$value;
 
         return response()->json([
             'progress' => $progress,
             'status' => match (true) {
-                $progress < 0   => 'failed',
+                $progress < 0 => 'failed',
                 $progress >= 100 => 'done',
-                default         => 'processing',
+                default => 'processing',
             },
         ]);
     }
+
     public function downloadZip(int $album_id)
     {
         $album = Album::findOrFail($album_id);

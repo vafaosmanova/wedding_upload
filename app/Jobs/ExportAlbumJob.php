@@ -101,7 +101,6 @@ class ExportAlbumJob implements ShouldQueue
 
             $remotePath = "albums/{$this->albumId}/exports/album.zip";
             Storage::disk($disk)->put($remotePath, fopen($tmpPath, 'r'));
-            Redis::setex($redisKey, 3600, 100);
             @unlink($tmpPath);
 
             Redis::setex($redisKey, 3600, 100);

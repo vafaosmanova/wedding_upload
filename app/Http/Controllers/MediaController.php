@@ -11,9 +11,8 @@ use App\Traits\MediaFormatter;
 class MediaController extends Controller
 {
     use MediaFormatter;
-    /**
-     * Medien in Genehmigungswarteschlange
-     */
+
+    // Medien in Genehmigungswarteschlange
     public function pending($album_id)
     {
         $media = Media::where('album_id', $album_id)
@@ -32,10 +31,7 @@ class MediaController extends Controller
         return response()->json(['media' => $formatted]);
     }
 
-    /**
-     * Genehmigen
-     */
-
+    // Genehmigen
     public function approve($media_id)
     {
         $media = Media::find($media_id);
@@ -55,9 +51,7 @@ class MediaController extends Controller
     }
 
 
-    /**
-     * Löschen
-     */
+    // Löschen
     public function destroy($media_id)
     {
         $media = Media::find($media_id);
@@ -74,9 +68,7 @@ class MediaController extends Controller
         return response()->json(['message' => 'Media deleted']);
     }
 
-    /**
-     * Streamen für User
-     */
+    // Streamen für User
     public function streamUserMedia($media_id)
     {
         $media = Media::findOrFail($media_id);

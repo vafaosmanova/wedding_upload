@@ -55,9 +55,12 @@ redis-server
 ## Ablauf (Gastzugriff)
 
 1. Besitzer erstellt Album mit PIN.
-2. Gast scannt QR-Code -> /guest/:albumId.
+2. Gast scannt QR-Code -> /gast/:albumId.
 3. Gast gibt PIN ein -> Token wird in Redis gespeichert (24 h gültig).
 4. Mit Token kann Gast Medien sehen oder hochladen.
+5. Gast kann Medien hochladen und Album herunterladen.
+6. Besitzer kann Medien genehmigen, ZIP-Exporte der Alben erstellen 
+   und Album herunterladen.
 
 ## Wichtige Befehle
 
@@ -71,6 +74,8 @@ Queue starten                   php artisan queue:work
 > AuthController - Login & Registrierung
 > AlbumController - Albenverwaltung & Export
 > GuestAlbumController - Gastzugriff & PIN-Prüfung
+> MediaController - Medien genehmigen, Medien streamen
+> QRCodeController - QR-Code anzeigen
 > ExportAlbumJob - ZIP-Erstellung im Hintergrund
 
 

@@ -6,7 +6,6 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use SimpleSoftwareIO\QrCode\Generator;
 
@@ -34,21 +33,21 @@ class Album extends Model
         $album = self::create($attributes);
         $album->qr_code = app(Generator::class)
             ->size(200)
-            ->generate(url('/guest/' . $album->id));
+            ->generate(url('/gast/' . $album->id));
         $album->save();
         return $album;
     }
-    //Beziehung: Ein Album gehört zu ein User (n:1)
+    //Beziehung: Ein Album gehört zu einem User (n:1)
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
     }
-    //Beziehung: Ein Album besitzt viele Medien (1:n)
+    //Beziehung: Ein Album hat viele Medien (1:n)
     public function media(): HasMany
     {
         return $this->hasMany(Media::class);
     }
-    //Beziehung: Ein Album besitzt ein Pin (1:1)
+    //Beziehung: Ein Album hat einen Pin (1:1)
     public function pin(): HasOne
     {
         return $this->hasOne(Pin::class);

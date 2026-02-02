@@ -39,7 +39,7 @@
                 focus:outline-none focus:ring-2 focus:ring-purple-400 focus:ring-offset-2"
                         @click="exportAlbum"
                         :disabled="exportProgress > 0 && exportProgress < 100">
-                    ZIP Export starten
+                    Alle Fotos herunterladen
                 </button>
 
                 <div v-if="exportProgress > 0"

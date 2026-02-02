@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Models\Album;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
 use App\Traits\MediaFormatter;
 
 class UploadController extends Controller

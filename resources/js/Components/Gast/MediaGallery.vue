@@ -7,7 +7,7 @@
            hover:from-pink-600 hover:to-purple-600 hover:scale-105
            focus:outline-none focus:ring-2 focus:ring-purple-400 focus:ring-offset-2"
         >
-            Photo Hochladen
+            Photo hochladen
         </button>
         <button
             v-if="newMediaAvailable"
